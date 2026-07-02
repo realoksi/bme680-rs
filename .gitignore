@@ -1,0 +1,5 @@
+# ignore some cargo
+/target
+
+# ignore jetbrains
+/.idea
