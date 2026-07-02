@@ -1,13 +1,37 @@
-macro_rules! map {
-    ($name:ident, $addr:expr $(, $length:expr)?) => {
+use crate::Layer;
 
+macro_rules! map {
+    ($name:ident, $addr:expr) => {
         pub(crate) struct $name;
 
         impl $name {
-            pub(crate) const fn get_addr() -> u8 { $addr }
-            $(
-            pub(crate) const fn length() -> isize { $length }
-            )?
+            pub(crate) const fn get_addr() -> u8 {
+                $addr
+            }
+            pub(crate) fn read<L: Layer>(transport_layer: &mut L) -> crate::Result<u8> {
+                transport_layer.read_byte(Self::get_addr())
+            }
+        }
+    };
+
+    ($name:ident, $addr:expr, $length:expr) => {
+        pub(crate) struct $name;
+
+        impl $name {
+            pub(crate) const fn get_addr() -> u8 {
+                $addr
+            }
+            pub(crate) const fn length() -> isize {
+                $length
+            }
+            pub(crate) fn read<L: Layer>(
+                transport_layer: &mut L,
+                buf: &mut [u8],
+            ) -> crate::Result<usize> {
+                assert_eq!(buf.len(), Self::length() as usize);
+
+                todo!()
+            }
         }
     };
 }
