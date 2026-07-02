@@ -23,9 +23,7 @@ where
     L: Layer,
 {
     pub fn new(transport_layer: L) -> Self {
-        Self {
-            transport_layer
-        }
+        Self { transport_layer }
     }
 
     pub fn get_chip_id(&mut self) -> u8 {
