@@ -4,6 +4,7 @@
 
 pub type Result<T> = core::result::Result<T, ()>;
 
+pub trait Layer {
     fn read_byte(&mut self, addr: u8) -> Result<u8>;
     fn write_byte(&mut self, addr: u8, data: u8) -> Result<()>;
 }
