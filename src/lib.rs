@@ -24,6 +24,17 @@ where
     transport_layer: L,
 }
 
+/// A helper macro for accessing simple registers from `memory_map`.
+macro_rules! reg {
+    ($name:ident, $result:ident) => {
+        paste::paste! {
+            pub fn[<get_ $name>](&mut self) -> Result<$result> {
+                memory_map::$name::read(&mut self.transport_layer)
+            }
+        }
+    };
+}
+
 impl<L> BME680<L>
 where
     L: Layer,
@@ -32,8 +43,5 @@ where
         Self { transport_layer }
     }
 
-    /// Get the chip identifier.
-    pub fn get_chip_id(&mut self) -> Result<u8> {
-        memory_map::chip_id::read(&mut self.transport_layer)
-    }
+    reg!(chip_id, u8);
 }
