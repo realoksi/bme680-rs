@@ -12,6 +12,8 @@ macro_rules! map {
     };
 }
 
+// TODO: identify duplicate addresses and alias when appropriate
+
 map!(status,           0x73);
 map!(variant_id,       0xF0);
 map!(reset,            0xE0);
