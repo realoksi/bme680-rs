@@ -1,5 +1,8 @@
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
+#![no_std]
+#![allow(non_camel_case_types)]
+#![allow(dead_code)]
 }
 
 #[cfg(test)]
