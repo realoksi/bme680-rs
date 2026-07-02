@@ -26,7 +26,8 @@ where
         Self { transport_layer }
     }
 
-    pub fn get_chip_id(&mut self) -> u8 {
-        self.transport_layer.read_byte(memory_map::chip_id::get_addr()).unwrap()
+    /// Get the chip identifier.
+    pub fn get_chip_id(&mut self) -> Result<u8> {
+        memory_map::chip_id::read(&mut self.transport_layer)
     }
 }
