@@ -17,27 +17,6 @@ macro_rules! map {
             }
         }
     };
-
-    ($name:ident, $addr:expr, $length:expr) => {
-        pub(crate) struct $name;
-
-        impl $name {
-            pub(crate) const fn get_addr() -> u8 {
-                $addr
-            }
-            pub(crate) const fn length() -> isize {
-                $length
-            }
-            pub(crate) fn read<L: Layer>(
-                transport_layer: &mut L,
-                buf: &mut [u8],
-            ) -> crate::Result<usize> {
-                assert_eq!(buf.len(), Self::length() as usize);
-
-                todo!()
-            }
-        }
-    };
 }
 
 // TODO: identify duplicate addresses and alias when appropriate
@@ -52,9 +31,12 @@ map!(ctrl_hum, 0x72);
 map!(ctrl_gas_1, 0x71);
 map!(ctrl_gas_0, 0x70);
 map!(gas_wait_shared, 0x6E);
-map!(gas_wait_x, 0x6D, -10);
-map!(res_heat_x, 0x63, -10);
-map!(idac_heat_x, 0x59, -10);
+
+// TODO: Split these into 9 separate registers each.
+// map!(gas_wait_x, 0x6D, -10);
+// map!(res_heat_x, 0x63, -10);
+// map!(idac_heat_x, 0x59, -10);
+
 map!(gas_r_lsb_2, 0x4F);
 map!(gas_r_msb_2, 0x48);
 map!(hum_lsb_2, 0x47);
