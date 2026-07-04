@@ -25,12 +25,29 @@ where
     transport_layer: L,
 }
 
-/// A helper macro for accessing simple registers from `memory_map`.
-macro_rules! reg {
-    ($name:ident, $result:ident) => {
+/// A helper macro for accessing read-only registers from `memory_map`.
+macro_rules! reg_ro {
+    ($name:ident, $output:expr) => {
         paste::paste! {
-            pub(crate) fn[<get_ $name>](&mut self) -> Result<$result> {
-                memory_map::$name::read(&mut self.transport_layer)
+            pub(crate) fn[<read_ $name>](&mut self) -> Result<$output> {
+                Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
+            }
+        }
+    };
+}
+
+/// A helper macro for accessing read-write registers from `memory_map`.
+macro_rules! reg_rw {
+    ($name:ident, $input:expr) => {
+        paste::paste! {
+            pub(crate) fn[<read_ $name>](&mut self) -> Result<$input> {
+                Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
+            }
+        }
+
+        paste::paste! {
+            pub(crate) fn[<write_ $name>](&mut self, data: $input) -> Result<()> {
+                memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
     };
