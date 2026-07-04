@@ -28,7 +28,7 @@ where
 macro_rules! reg {
     ($name:ident, $result:ident) => {
         paste::paste! {
-            pub fn[<get_ $name>](&mut self) -> Result<$result> {
+            pub(crate) fn[<get_ $name>](&mut self) -> Result<$result> {
                 memory_map::$name::read(&mut self.transport_layer)
             }
         }
