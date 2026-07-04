@@ -11,6 +11,10 @@ macro_rules! map {
             pub(crate) fn read<L: Layer>(transport_layer: &mut L) -> crate::Result<u8> {
                 transport_layer.read_byte(Self::get_addr())
             }
+            // TODO: This should be conditional. Not all registers are writable.
+            pub(crate) fn write<L: Layer>(transport_layer: &mut L, data: u8) -> crate::Result<()> {
+                transport_layer.write_byte(Self::get_addr(), data)
+            }
         }
     };
 
