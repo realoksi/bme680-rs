@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 paste = "1.0.15"
+bitfield = "0.19.4"
