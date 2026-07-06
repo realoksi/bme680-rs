@@ -29,7 +29,7 @@ where
 macro_rules! reg_ro {
     ($name:ident, $output:expr) => {
         paste::paste! {
-            pub(crate) fn[<read_ $name>](&mut self) -> Result<$output> {
+            pub fn[<read_ $name>](&mut self) -> Result<$output> {
                 Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
@@ -40,13 +40,13 @@ macro_rules! reg_ro {
 macro_rules! reg_rw {
     ($name:ident, $input:expr) => {
         paste::paste! {
-            pub(crate) fn[<read_ $name>](&mut self) -> Result<$input> {
+            pub fn[<read_ $name>](&mut self) -> Result<$input> {
                 Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
 
         paste::paste! {
-            pub(crate) fn[<write_ $name>](&mut self, data: $input) -> Result<()> {
+            pub fn[<write_ $name>](&mut self, data: $input) -> Result<()> {
                 memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
