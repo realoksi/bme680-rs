@@ -82,7 +82,6 @@ bitfield! {
     pub get_gas_meas_index_2, _: 3, 0;
 }
 
-
 bitfield! {
     #[derive(Debug, From, Into)]
     pub struct GasRLsb1(u8);
