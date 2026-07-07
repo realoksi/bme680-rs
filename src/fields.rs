@@ -52,10 +52,10 @@ bitfield! {
     #[derive(Debug, From, Into)]
     pub struct GasRLsb2(u8);
 
-    pub get_gas_r, _: 6, 7;
+    pub get_gas_r, _: 7, 6;
     pub get_gas_valid_r, _: 5, 5;
     pub get_heat_stab_r, _: 4, 4;
-    pub get_gas_range_r, _: 0, 3;
+    pub get_gas_range_r, _: 3, 0;
 }
 
 bitfield! {
