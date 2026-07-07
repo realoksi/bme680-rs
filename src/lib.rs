@@ -97,7 +97,7 @@ where
     reg_ro!(press_msb_1, u8);
     reg_ro!(sub_meas_index_1, u8);
     reg_ro!(meas_status_1, fields::MeasStatus1);
-    reg_ro!(gas_r_lsb_0, u8);
+    reg_ro!(gas_r_lsb_0, fields::GasRLsb0);
     reg_ro!(gas_r_msb_0, u8);
     reg_ro!(hum_lsb_0, u8);
     reg_ro!(hum_msb_0, u8);

@@ -140,3 +140,13 @@ bitfield! {
     pub get_measuring, _: 5, 5;
     pub get_gas_meas_index_0, _: 3 , 0 ;
 }
+
+bitfield! {
+    #[derive(Debug, From, Into)]
+    pub struct GasRLsb0(u8);
+
+    pub get_gas_r, _: 7, 6;
+    pub get_gas_valid_r, _: 5, 5;
+    pub get_heat_stab_r, _: 4, 4;
+    pub get_gas_range_r, _: 3, 0;
+}
