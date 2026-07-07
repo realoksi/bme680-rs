@@ -1,11 +1,11 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+#![no_std]
 #![allow(non_camel_case_types)]
 #![allow(dead_code)]
 
 mod fields;
 mod memory_map;
 #[cfg(any(
-feature = "i2c-linux",
+feature = "embedded-hal"
 ))]
 mod impls;
 

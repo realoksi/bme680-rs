@@ -5,11 +5,10 @@ edition = "2024"
 
 [features]
 default = []
-std = []
-i2c-linux = ["std", "dep:i2c-linux"]
+embedded-hal = ["dep:embedded-hal"]
 
 [dependencies]
 paste = "1.0.15"
 bitfield = "0.19.4"
 derive_more = { version = "2.1.1", default-features = false, features = ["from", "into"] }
-i2c-linux = { version = "0.1.2", default-features = false, optional = true }
+embedded-hal = {version = "1.0.0", default-features = false, optional = true}
