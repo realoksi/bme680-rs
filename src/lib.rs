@@ -3,11 +3,9 @@
 #![allow(dead_code)]
 
 mod fields;
-mod memory_map;
-#[cfg(any(
-feature = "embedded-hal"
-))]
+#[cfg(any(feature = "embedded-hal"))]
 mod impls;
+mod memory_map;
 
 pub type Result<T> = core::result::Result<T, ()>;
 
