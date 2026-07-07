@@ -19,8 +19,6 @@ macro_rules! map {
     };
 }
 
-// TODO: identify duplicate addresses and alias when appropriate
-
 map!(status, 0x73);
 map!(variant_id, 0xF0);
 map!(reset, 0xE0);
@@ -131,24 +129,24 @@ map!(par_g1, 0xED);
 map!(par_g2_lsb, 0xEB);
 map!(par_g2_msb, 0xEC);
 map!(par_g3, 0xEE);
-map!(temp_adc_0_lsb, 0x24); // only bits 7:4
-map!(temp_adc_0_msb, 0x23);
-map!(temp_adc_0_xlsb, 0x22);
-map!(temp_adc_1_lsb, 0x35); // only bits 7:4
-map!(temp_adc_1_msb, 0x34);
-map!(temp_adc_1_xlsb, 0x33);
-map!(temp_adc_2_lsb, 0x46); // only bits 7:4
-map!(temp_adc_2_msb, 0x45);
-map!(temp_adc_2_xlsb, 0x44);
-map!(press_adc_0_lsb, 0x21); // only bits 7:4
-map!(press_adc_0_msb, 0x20);
-map!(press_adc_0_xlsb, 0x1F);
-map!(press_adc_1_lsb, 0x32); // only bits 7:4
-map!(press_adc_1_msb, 0x31);
-map!(press_adc_1_xlsb, 0x30);
-map!(press_adc_2_lsb, 0x43); // only bits 7:4
-map!(press_adc_2_msb, 0x42);
-map!(press_adc_2_xlsb, 0x41);
+map!(temp_adc_0_xlsb, 0x24); // only bits 7:4
+map!(temp_adc_0_lsb, 0x23);
+map!(temp_adc_0_msb, 0x22);
+map!(temp_adc_1_xlsb, 0x35); // only bits 7:4
+map!(temp_adc_1_lsb, 0x34);
+map!(temp_adc_1_msb, 0x33);
+map!(temp_adc_2_xlsb, 0x46); // only bits 7:4
+map!(temp_adc_2_lsb, 0x45);
+map!(temp_adc_2_msb, 0x44);
+map!(press_adc_0_xlsb, 0x21); // only bits 7:4
+map!(press_adc_0_lsb, 0x20);
+map!(press_adc_0_msb, 0x1F);
+map!(press_adc_1_xlsb, 0x32); // only bits 7:4
+map!(press_adc_1_lsb, 0x31);
+map!(press_adc_1_msb, 0x30);
+map!(press_adc_2_xlsb, 0x43); // only bits 7:4
+map!(press_adc_2_lsb, 0x42);
+map!(press_adc_2_msb, 0x41);
 map!(hum_adc_0_lsb, 0x26);
 map!(hum_adc_0_msb, 0x25);
 map!(hum_adc_1_lsb, 0x37);

@@ -138,5 +138,5 @@ bitfield! {
     pub get_new_data, _: 7, 7;
     pub get_gas_measuring, _: 6, 6;
     pub get_measuring, _: 5, 5;
-    pub get_gas_meas_index_1, _: 3 , 0 ;
+    pub get_gas_meas_index_0, _: 3 , 0 ;
 }
