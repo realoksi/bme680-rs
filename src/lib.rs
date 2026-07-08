@@ -5,6 +5,7 @@
 mod fields;
 #[cfg(any(feature = "embedded-hal"))]
 mod impls;
+mod macros;
 mod memory_map;
 
 pub type Result<T> = core::result::Result<T, ()>;
