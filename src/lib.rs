@@ -88,10 +88,38 @@ where
         }
     }
 
+    // cached get-methods
+
+    get_ro!(chip_id);
+    get_ro!(variant_id);
+
+    get_ro!(par_t1, u16, [par_t1_lsb, par_t1_msb]);
+    get_ro!(par_t2, u16, [par_t2_lsb, par_t2_msb]);
+
+    get_ro!(par_t3);
+    get_ro!(par_p1, u16, [par_p1_lsb, par_p1_msb]);
+    get_ro!(par_p2, u16, [par_p2_lsb, par_p2_msb]);
+    get_ro!(par_p3);
+    get_ro!(par_p4, u16, [par_p4_lsb, par_p4_msb]);
+    get_ro!(par_p5, u16, [par_p5_lsb, par_p5_msb]);
+    get_ro!(par_p6);
+    get_ro!(par_p7);
+    get_ro!(par_p8, u16, [par_p8_lsb, par_p8_msb]);
+    get_ro!(par_p9, u16, [par_p9_lsb, par_p9_msb]);
+    get_ro!(par_p10);
+    get_ro!(par_h3);
+    get_ro!(par_h4);
+    get_ro!(par_h5);
+    get_ro!(par_h6);
+    get_ro!(par_h7);
+    get_ro!(par_g1);
+    get_ro!(par_g2, u16, [par_g2_lsb, par_g2_msb]);
+    get_ro!(par_g3);
+
+    // ...
+
     reg_rw!(status, fields::Status);
-    reg_ro!(variant_id, u8);
     reg_rw!(reset, u8);
-    reg_ro!(chip_id, u8);
     reg_rw!(config, fields::Config);
     reg_rw!(ctrl_meas, fields::CtrlMeas);
     reg_rw!(ctrl_hum, fields::CtrlHum);
@@ -134,388 +162,6 @@ where
     reg_ro!(press_msb_0, u8);
     reg_ro!(sub_meas_index_0, u8);
     reg_ro!(meas_status_0, fields::MeasStatus0);
-
-    reg_ro!(chip_id, u8);
-
-    pub fn get_chip_id(&mut self) -> Result<u8> {
-        match self.chip_id {
-            Some(v) => Ok(v),
-            None => {
-                let chip_id = self.read_chip_id()?;
-                self.chip_id = Some(chip_id);
-                Ok(chip_id)
-            }
-        }
-    }
-
-    reg_ro!(variant_id, u8);
-
-    pub fn get_variant_id(&mut self) -> Result<u8> {
-        match self.variant_id {
-            Some(v) => Ok(v),
-            None => {
-                let variant_id = self.read_variant_id()?;
-                self.variant_id = Some(variant_id);
-                Ok(variant_id)
-            }
-        }
-    }
-
-    reg_ro!(par_t1_lsb, u8);
-    reg_ro!(par_t1_msb, u8);
-
-    pub fn get_par_t1(&mut self) -> Result<u16> {
-        match self.par_t1 {
-            Some(v) => Ok(v),
-            None => {
-                let par_t1_lsb = self.read_par_t1_lsb()?;
-                let par_t1_msb = self.read_par_t1_msb()?;
-                let par_t1 = u16::from_le_bytes([par_t1_lsb, par_t1_msb]);
-
-                self.par_t1 = Some(par_t1);
-                Ok(par_t1)
-            }
-        }
-    }
-
-    reg_ro!(par_t2_lsb, u8);
-    reg_ro!(par_t2_msb, u8);
-
-    pub fn get_par_t2(&mut self) -> Result<u16> {
-        match self.par_t2 {
-            Some(v) => Ok(v),
-            None => {
-                let par_t2_lsb = self.read_par_t2_lsb()?;
-                let par_t2_msb = self.read_par_t2_msb()?;
-                let par_t2 = u16::from_le_bytes([par_t2_lsb, par_t2_msb]);
-
-                self.par_t2 = Some(par_t2);
-                Ok(par_t2)
-            }
-        }
-    }
-
-    reg_ro!(par_t3, u8);
-
-    pub fn get_par_t3(&mut self) -> Result<u8> {
-        match self.par_t3 {
-            Some(v) => Ok(v),
-            None => {
-                let par_t3 = self.read_par_t3()?;
-
-                self.par_t3 = Some(par_t3);
-                Ok(par_t3)
-            }
-        }
-    }
-
-    reg_ro!(par_p1_lsb, u8);
-    reg_ro!(par_p1_msb, u8);
-
-    pub fn get_par_p1(&mut self) -> Result<u16> {
-        match self.par_p1 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p1_lsb = self.read_par_p1_lsb()?;
-                let par_p1_msb = self.read_par_p1_msb()?;
-                let par_p1 = u16::from_le_bytes([par_p1_lsb, par_p1_msb]);
-
-                self.par_p1 = Some(par_p1);
-                Ok(par_p1)
-            }
-        }
-    }
-
-    reg_ro!(par_p2_lsb, u8);
-    reg_ro!(par_p2_msb, u8);
-
-    pub fn get_par_p2(&mut self) -> Result<u16> {
-        match self.par_p2 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p2_lsb = self.read_par_p2_lsb()?;
-                let par_p2_msb = self.read_par_p2_msb()?;
-                let par_p2 = u16::from_le_bytes([par_p2_lsb, par_p2_msb]);
-
-                self.par_p2 = Some(par_p2);
-                Ok(par_p2)
-            }
-        }
-    }
-
-    reg_ro!(par_p3, u8);
-
-    pub fn get_par_p3(&mut self) -> Result<u8> {
-        match self.par_p3 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p3 = self.read_par_p3()?;
-
-                self.par_p3 = Some(par_p3);
-                Ok(par_p3)
-            }
-        }
-    }
-
-    reg_ro!(par_p4_lsb, u8);
-    reg_ro!(par_p4_msb, u8);
-
-    pub fn get_par_p4(&mut self) -> Result<u16> {
-        match self.par_p4 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p4_lsb = self.read_par_p4_lsb()?;
-                let par_p4_msb = self.read_par_p4_msb()?;
-                let par_p4 = u16::from_le_bytes([par_p4_lsb, par_p4_msb]);
-
-                self.par_p4 = Some(par_p4);
-                Ok(par_p4)
-            }
-        }
-    }
-
-    reg_ro!(par_p5_lsb, u8);
-    reg_ro!(par_p5_msb, u8);
-
-    pub fn get_par_p5(&mut self) -> Result<u16> {
-        match self.par_p5 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p5_lsb = self.read_par_p5_lsb()?;
-                let par_p5_msb = self.read_par_p5_msb()?;
-                let par_p5 = u16::from_le_bytes([par_p5_lsb, par_p5_msb]);
-
-                self.par_p5 = Some(par_p5);
-                Ok(par_p5)
-            }
-        }
-    }
-
-    reg_ro!(par_p6, u8);
-
-    pub fn get_par_p6(&mut self) -> Result<u8> {
-        match self.par_p6 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p6 = self.read_par_p6()?;
-
-                self.par_p6 = Some(par_p6);
-                Ok(par_p6)
-            }
-        }
-    }
-
-    reg_ro!(par_p7, u8);
-
-    pub fn get_par_p7(&mut self) -> Result<u8> {
-        match self.par_p7 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p7 = self.read_par_p7()?;
-
-                self.par_p7 = Some(par_p7);
-                Ok(par_p7)
-            }
-        }
-    }
-
-    reg_ro!(par_p8_lsb, u8);
-    reg_ro!(par_p8_msb, u8);
-
-    pub fn get_par_p8(&mut self) -> Result<u16> {
-        match self.par_p8 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p8_lsb = self.read_par_p8_lsb()?;
-                let par_p8_msb = self.read_par_p8_msb()?;
-                let par_p8 = u16::from_le_bytes([par_p8_lsb, par_p8_msb]);
-
-                self.par_p8 = Some(par_p8);
-                Ok(par_p8)
-            }
-        }
-    }
-
-    reg_ro!(par_p9_lsb, u8);
-    reg_ro!(par_p9_msb, u8);
-
-    pub fn get_par_p9(&mut self) -> Result<u16> {
-        match self.par_p9 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p9_lsb = self.read_par_p9_lsb()?;
-                let par_p9_msb = self.read_par_p9_msb()?;
-                let par_p9 = u16::from_le_bytes([par_p9_lsb, par_p9_msb]);
-
-                self.par_p9 = Some(par_p9);
-                Ok(par_p9)
-            }
-        }
-    }
-
-    reg_ro!(par_p10, u8);
-
-    pub fn get_par_p10(&mut self) -> Result<u8> {
-        match self.par_p10 {
-            Some(v) => Ok(v),
-            None => {
-                let par_p10 = self.read_par_p10()?;
-
-                self.par_p10 = Some(par_p10);
-                Ok(par_p10)
-            }
-        }
-    }
-
-    reg_ro!(par_h1_lsb, u8);
-    reg_ro!(par_h1_msb, u8);
-
-    pub fn get_par_h1(&mut self) -> Result<u16> {
-        match self.par_h1 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h1_lsb = self.read_par_h1_lsb()? & 0b1111;
-                let par_h1_msb = self.read_par_h1_msb()?;
-                let par_h1 = (par_h1_msb as u16) << 4 | par_h1_lsb as u16;
-
-                self.par_h1 = Some(par_h1);
-                Ok(par_h1)
-            }
-        }
-    }
-
-    reg_ro!(par_h2_lsb, u8);
-    reg_ro!(par_h2_msb, u8);
-
-    pub fn get_par_h2(&mut self) -> Result<u16> {
-        match self.par_h2 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h2_lsb = self.read_par_h2_lsb()?;
-                let par_h2_msb = self.read_par_h2_msb()?;
-                let par_h2 = (par_h2_msb as u16) << 4 | par_h2_lsb as u16;
-
-                self.par_h2 = Some(par_h2);
-                Ok(par_h2)
-            }
-        }
-    }
-
-    reg_ro!(par_h3, u8);
-
-    pub fn get_par_h3(&mut self) -> Result<u8> {
-        match self.par_h3 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h3 = self.read_par_h3()?;
-
-                self.par_h3 = Some(par_h3);
-                Ok(par_h3)
-            }
-        }
-    }
-
-    reg_ro!(par_h4, u8);
-
-    pub fn get_par_h4(&mut self) -> Result<u8> {
-        match self.par_h4 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h4 = self.read_par_h4()?;
-
-                self.par_h4 = Some(par_h4);
-                Ok(par_h4)
-            }
-        }
-    }
-
-    reg_ro!(par_h5, u8);
-
-    pub fn get_par_h5(&mut self) -> Result<u8> {
-        match self.par_h5 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h5 = self.read_par_h5()?;
-
-                self.par_h5 = Some(par_h5);
-                Ok(par_h5)
-            }
-        }
-    }
-
-    reg_ro!(par_h6, u8);
-
-    pub fn get_par_h6(&mut self) -> Result<u8> {
-        match self.par_h6 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h6 = self.read_par_h6()?;
-
-                self.par_h6 = Some(par_h6);
-                Ok(par_h6)
-            }
-        }
-    }
-
-    reg_ro!(par_h7, u8);
-
-    pub fn get_par_h7(&mut self) -> Result<u8> {
-        match self.par_h7 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h7 = self.read_par_h7()?;
-
-                self.par_h7 = Some(par_h7);
-                Ok(par_h7)
-            }
-        }
-    }
-
-    reg_ro!(par_g1, u8);
-
-    pub fn get_par_g1(&mut self) -> Result<u8> {
-        match self.par_g1 {
-            Some(v) => Ok(v),
-            None => {
-                let par_g1 = self.read_par_g1()?;
-
-                self.par_g1 = Some(par_g1);
-                Ok(par_g1)
-            }
-        }
-    }
-
-    reg_ro!(par_g2_lsb, u8);
-    reg_ro!(par_g2_msb, u8);
-
-    pub fn get_par_g2(&mut self) -> Result<u16> {
-        match self.par_g2 {
-            Some(v) => Ok(v),
-            None => {
-                let par_g2_lsb = self.read_par_g2_lsb()?;
-                let par_g2_msb = self.read_par_g2_msb()?;
-                let par_g2 = u16::from_le_bytes([par_g2_lsb, par_g2_msb]);
-
-                self.par_g2 = Some(par_g2);
-                Ok(par_g2)
-            }
-        }
-    }
-
-    reg_ro!(par_g3, u8);
-
-    pub fn get_par_g3(&mut self) -> Result<u8> {
-        match self.par_g3 {
-            Some(v) => Ok(v),
-            None => {
-                let par_g3 = self.read_par_g3()?;
-
-                self.par_g3 = Some(par_g3);
-                Ok(par_g3)
-            }
-        }
-    }
-
     reg_ro!(temp_adc_0_lsb, u8);
     reg_ro!(temp_adc_0_msb, u8);
     reg_ro!(temp_adc_0_xlsb, u8);
