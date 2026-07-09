@@ -50,13 +50,59 @@ macro_rules! map {
 }
 
 #[macro_export]
-macro_rules! cache {
-    ($name:ident, $ty:ty, $block:block) => {
+macro_rules! get_ro {
+    ($name:ident, $ty:ty, [$lsb:ident, $msb:ident]) => {
+        reg_ro!($lsb, u8);
+        reg_ro!($msb, u8);
+
         paste::paste! {
             pub fn[<get_ $name>](&mut self) -> Result<$ty> {
+                match self.$name {
+                    Some(v) => Ok(v),
+                    None => {
+                        let lsb = self.[<read_ $lsb>]()?;
+                        let msb = self.[<read_ $msb>]()?;
+                        let v = u16::from_le_bytes([lsb, msb]) as $ty;
 
-                Ok(result)
+                        self.$name = Some(v);
+                        Ok(v)
+                    }
+                }
             }
         }
-    }
+    };
+    ($name:ident, $ty:ty) => {
+        reg_ro!($name, u8);
+
+        paste::paste! {
+            pub fn[<get_ $name>](&mut self) -> Result<$ty> {
+                match self.$name {
+                    Some(v) => Ok(v),
+                    None => {
+                        let v = self.[<read_ $name>]()? as $ty;
+
+                        self.$name = Some(v);
+                        Ok(v)
+                    }
+                }
+            }
+        }
+    };
+    ($name:ident) => {
+        reg_ro!($name, u8);
+
+        paste::paste! {
+            pub fn[<get_ $name>](&mut self) -> Result<u8> {
+                match self.$name {
+                    Some(v) => Ok(v),
+                    None => {
+                        let v = self.[<read_ $name>]()?;
+
+                        self.$name = Some(v);
+                        Ok(v)
+                    }
+                }
+            }
+        }
+    };
 }
