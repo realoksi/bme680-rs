@@ -197,4 +197,38 @@ where
     reg_ro!(gas_range_0, u8);
     reg_ro!(gas_range_1, u8);
     reg_ro!(gas_range_2, u8);
+
+    reg_ro!(par_h1_lsb, u8);
+    reg_ro!(par_h1_msb, u8);
+
+    pub fn get_par_h1(&mut self) -> Result<u16> {
+        match self.par_h1 {
+            Some(v) => Ok(v),
+            None => {
+                let par_h1_lsb = self.read_par_h1_lsb()? & 0b0000_1111;
+                let par_h1_msb = self.read_par_h1_msb()?;
+                let par_h1 = (par_h1_msb as u16) << 4 | par_h1_lsb as u16;
+
+                self.par_h1 = Some(par_h1);
+                Ok(par_h1)
+            }
+        }
+    }
+
+    reg_ro!(par_h2_lsb, u8);
+    reg_ro!(par_h2_msb, u8);
+
+    pub fn get_par_h2(&mut self) -> Result<u16> {
+        match self.par_h2 {
+            Some(v) => Ok(v),
+            None => {
+                let par_h2_lsb = self.read_par_h2_lsb()? & 0b1111_0000;
+                let par_h2_msb = self.read_par_h2_msb()?;
+                let par_h2 = (par_h2_msb as u16) << 4 | (par_h2_lsb >> 4) as u16;
+
+                self.par_h2 = Some(par_h2);
+                Ok(par_h2)
+            }
+        }
+    }
 }
