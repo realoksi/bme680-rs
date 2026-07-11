@@ -1,34 +1,43 @@
-/// A helper macro for accessing read-only registers from `memory_map`.
 #[macro_export]
 macro_rules! reg_ro {
-    ($name:ident, $output:expr) => {
+    ($name:ident) => {
         paste::paste! {
-            pub fn[<read_ $name>](&mut self) -> Result<$output> {
+            pub fn [<read_ $name>](&mut self) -> Result<u8> {
+                Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
+            }
+        }
+    };
+    ($name:ident, $ty:ty) => {
+        paste::paste! {
+            pub fn [<read_ $name>](&mut self) -> Result<$ty> {
                 Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
     };
 }
 
-/// A helper macro for accessing read-write registers from `memory_map`.
 #[macro_export]
 macro_rules! reg_rw {
-    ($name:ident, $input:expr) => {
-        paste::paste! {
-            pub fn[<read_ $name>](&mut self) -> Result<$input> {
-                Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
-            }
-        }
+    ($name:ident) => {
+        $crate::reg_ro!($name, u8);
 
         paste::paste! {
-            pub fn[<write_ $name>](&mut self, data: $input) -> Result<()> {
+            pub fn [<write_ $name>](&mut self, data: u8) -> Result<()> {
+                memory_map::$name::write(&mut self.transport_layer, data.into())
+            }
+        }
+    };
+    ($name:ident, $ty:ty) => {
+        $crate::reg_ro!($name, $ty);
+
+        paste::paste! {
+            pub fn [<write_ $name>](&mut self, data: $ty) -> Result<()> {
                 memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
     };
 }
 
-/// A helper macro for mapping registers.
 #[macro_export]
 macro_rules! map {
     ($name:ident, $addr:expr) => {
@@ -38,11 +47,11 @@ macro_rules! map {
             pub(crate) const fn get_addr() -> u8 {
                 $addr
             }
-            pub(crate) fn read<L: Layer>(transport_layer: &mut L) -> crate::Result<u8> {
+            pub(crate) fn read<L: Layer>(transport_layer: &mut L) -> $crate::Result<u8> {
                 transport_layer.read_byte(Self::get_addr())
             }
             // TODO: This should be conditional. Not all registers are writable.
-            pub(crate) fn write<L: Layer>(transport_layer: &mut L, data: u8) -> crate::Result<()> {
+            pub(crate) fn write<L: Layer>(transport_layer: &mut L, data: u8) -> $crate::Result<()> {
                 transport_layer.write_byte(Self::get_addr(), data)
             }
         }
@@ -50,49 +59,12 @@ macro_rules! map {
 }
 
 #[macro_export]
-macro_rules! get_ro {
-    ($name:ident, $ty:ty, [$lsb:ident, $msb:ident]) => {
-        reg_ro!($lsb, u8);
-        reg_ro!($msb, u8);
-
-        paste::paste! {
-            pub fn[<get_ $name>](&mut self) -> Result<$ty> {
-                match self.$name {
-                    Some(v) => Ok(v),
-                    None => {
-                        let lsb = self.[<read_ $lsb>]()?;
-                        let msb = self.[<read_ $msb>]()?;
-                        let v = u16::from_le_bytes([lsb, msb]) as $ty;
-
-                        self.$name = Some(v);
-                        Ok(v)
-                    }
-                }
-            }
-        }
-    };
-    ($name:ident, $ty:ty) => {
-        reg_ro!($name, u8);
-
-        paste::paste! {
-            pub fn[<get_ $name>](&mut self) -> Result<$ty> {
-                match self.$name {
-                    Some(v) => Ok(v),
-                    None => {
-                        let v = self.[<read_ $name>]()? as $ty;
-
-                        self.$name = Some(v);
-                        Ok(v)
-                    }
-                }
-            }
-        }
-    };
+macro_rules! once_ro {
     ($name:ident) => {
-        reg_ro!($name, u8);
+        $crate::reg_ro!($name, u8);
 
         paste::paste! {
-            pub fn[<get_ $name>](&mut self) -> Result<u8> {
+            pub fn [<get_ $name>](&mut self) -> Result<u8> {
                 match self.$name {
                     Some(v) => Ok(v),
                     None => {
@@ -102,6 +74,109 @@ macro_rules! get_ro {
                         Ok(v)
                     }
                 }
+            }
+        }
+    };
+    ($name:ident, [$msb:ident, $lsb:ident]) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+
+        paste::paste! {
+            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+                match self.$name {
+                    Some(v) => Ok(v),
+                    None => {
+                        let msb = self.[<read_ $msb>]()?;
+                        let lsb = self.[<read_ $lsb>]()?;
+                        let v = u16::from_le_bytes([lsb, msb]);
+
+                        self.$name = Some(v);
+                        Ok(v)
+                    }
+                }
+            }
+        }
+    };
+    ($name:ident, [$msb:ident, $lsb:ident], |$m:ident, $l:ident| $result:expr) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+
+        paste::paste! {
+            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+                match self.$name {
+                    Some(v) => Ok(v),
+                    None => {
+                        let $m = self.[<read_ $msb>]()?;
+                        let $l = self.[<read_ $lsb>]()?;
+                        let v = $result;
+
+                        self.$name = Some(v);
+                        Ok(v)
+                    }
+                }
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! live_ro {
+    ($name:ident, [$msb:ident, $lsb:ident]) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+
+        paste::paste! {
+            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+                let msb = self.[<read_ $msb>]()?;
+                let lsb = self.[<read_ $lsb>]()?;
+                let v = u16::from_le_bytes([lsb, msb]);
+
+                Ok(v)
+            }
+        }
+    };
+    ($name:ident, [$msb:ident, $lsb:ident], |$m:ident, $l:ident| $result:expr) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+
+        paste::paste! {
+            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+                let $m = self.[<read_ $msb>]()?;
+                let $l = self.[<read_ $lsb>]()?;
+
+                Ok($result)
+            }
+        }
+    };
+    ($name:ident, [$msb:ident, $lsb:ident, $xlsb:ident]) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+        $crate::reg_ro!($xlsb, u8);
+
+        paste::paste! {
+            pub fn [<get_ $name>](&mut self) -> Result<u32> {
+                let msb = self.[<read_ $msb>]()?;
+                let lsb = self.[<read_ $lsb>]()?;
+                let xlsb = self.[<read_ $xlsb>]()?;
+
+                let v = u32::from_le_bytes([xlsb, lsb, msb, 0]);
+
+                Ok(v)
+            }
+        }
+    };
+    ($name:ident, [$msb:ident, $lsb:ident, $xlsb:ident], |$m:ident, $l:ident, $x:ident| $result:expr) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+        $crate::reg_ro!($xlsb, u8);
+
+        paste::paste! {
+            pub fn [<get_ $name>](&mut self) -> Result<u32> {
+                let $m = self.[<read_ $msb>]()?;
+                let $l = self.[<read_ $lsb>]()?;
+                let $x = self.[<read_ $xlsb>]()?;
+
+                Ok($result)
             }
         }
     };
