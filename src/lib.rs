@@ -88,35 +88,78 @@ where
         }
     }
 
-    // cached get-methods
+    once_ro!(chip_id);
+    once_ro!(variant_id);
+    once_ro!(par_t1, [par_t1_msb, par_t1_lsb]);
+    once_ro!(par_t2, [par_t2_msb, par_t2_lsb]);
+    once_ro!(par_t3);
+    once_ro!(par_p1, [par_p1_msb, par_p1_lsb]);
+    once_ro!(par_p2, [par_p2_msb, par_p2_lsb]);
+    once_ro!(par_p3);
+    once_ro!(par_p4, [par_p4_msb, par_p4_lsb]);
+    once_ro!(par_p5, [par_p5_msb, par_p5_lsb]);
+    once_ro!(par_p6);
+    once_ro!(par_p7);
+    once_ro!(par_p8, [par_p8_msb, par_p8_lsb]);
+    once_ro!(par_p9, [par_p9_msb, par_p9_lsb]);
+    once_ro!(par_p10);
+    once_ro!(par_h1, [par_h1_msb, par_h1_lsb], |msb, lsb| (msb as u16) << 4 | (lsb as u16) & 0b0000_1111);
+    once_ro!(par_h2, [par_h2_msb, par_h2_lsb], |msb, lsb| (msb as u16) << 4 | (lsb as u16) >> 4);
+    once_ro!(par_h3);
+    once_ro!(par_h4);
+    once_ro!(par_h5);
+    once_ro!(par_h6);
+    once_ro!(par_h7);
+    once_ro!(par_g1);
+    once_ro!(par_g2, [par_g2_msb, par_g2_lsb]);
+    once_ro!(par_g3);
 
-    get_ro!(chip_id);
-    get_ro!(variant_id);
+    live_ro!(gas_r_2, [gas_r_msb_2, gas_r_lsb_2], |msb, lsb| (msb as u16) << 2 | (lsb as u16) >> 6);
+    live_ro!(hum_0, [hum_msb_0, hum_lsb_0]);
 
-    get_ro!(par_t1, u16, [par_t1_lsb, par_t1_msb]);
-    get_ro!(par_t2, u16, [par_t2_lsb, par_t2_msb]);
+    live_ro!(
+        temp_2, [temp_msb_2, temp_lsb_2, temp_xlsb_2],
+        |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
+    );
 
-    get_ro!(par_t3);
-    get_ro!(par_p1, u16, [par_p1_lsb, par_p1_msb]);
-    get_ro!(par_p2, u16, [par_p2_lsb, par_p2_msb]);
-    get_ro!(par_p3);
-    get_ro!(par_p4, u16, [par_p4_lsb, par_p4_msb]);
-    get_ro!(par_p5, u16, [par_p5_lsb, par_p5_msb]);
-    get_ro!(par_p6);
-    get_ro!(par_p7);
-    get_ro!(par_p8, u16, [par_p8_lsb, par_p8_msb]);
-    get_ro!(par_p9, u16, [par_p9_lsb, par_p9_msb]);
-    get_ro!(par_p10);
-    get_ro!(par_h3);
-    get_ro!(par_h4);
-    get_ro!(par_h5);
-    get_ro!(par_h6);
-    get_ro!(par_h7);
-    get_ro!(par_g1);
-    get_ro!(par_g2, u16, [par_g2_lsb, par_g2_msb]);
-    get_ro!(par_g3);
+    live_ro!(
+        press_2, [press_msb_2, press_lsb_2, press_xlsb_2],
+        |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
+    );
 
-    // ...
+    live_ro!(
+        gas_r_1, [gas_r_msb_1, gas_r_lsb_1],
+        |msb, lsb| (msb as u16) << 2 | (lsb as u16) >> 6
+    );
+
+    live_ro!(hum_1, [hum_msb_1, hum_lsb_1]);
+
+    live_ro!(
+        temp_1, [temp_msb_1, temp_lsb_1, temp_xlsb_1],
+        |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
+    );
+
+    live_ro!(hum_2, [hum_msb_2, hum_lsb_2]);
+
+    live_ro!(
+        press_1, [press_msb_1, press_lsb_1, press_xlsb_1],
+        |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
+    );
+
+    live_ro!(
+        gas_r_0, [gas_r_msb_0, gas_r_lsb_0],
+        |msb, lsb| (msb as u16) << 2 | (lsb as u16) >> 6
+    );
+
+    live_ro!(
+        temp_0, [temp_msb_0, temp_lsb_0, temp_xlsb_0],
+        |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
+    );
+
+    live_ro!(
+        press_0, [press_msb_0, press_lsb_0, press_xlsb_0],
+        |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
+    );
 
     reg_rw!(status, fields::Status);
     reg_rw!(reset, u8);
@@ -126,42 +169,12 @@ where
     reg_rw!(ctrl_gas_1, fields::CtrlGas1);
     reg_rw!(ctrl_gas_0, fields::CtrlGas0);
     reg_rw!(gas_wait_shared, u8);
-    reg_ro!(gas_r_lsb_2, fields::GasRLsb2);
-    reg_ro!(gas_r_msb_2, u8);
-    reg_ro!(hum_lsb_2, u8);
-    reg_ro!(hum_msb_2, u8);
-    reg_ro!(temp_xlsb_2, fields::TempXlsb2);
-    reg_ro!(temp_lsb_2, u8);
-    reg_ro!(temp_msb_2, u8);
-    reg_ro!(press_xlsb_2, fields::PressXlsb2);
-    reg_ro!(press_lsb_2, u8);
-    reg_ro!(press_msb_2, u8);
-    reg_ro!(sub_meas_index_2, u8);
-    reg_ro!(meas_status_2, fields::MeasStatus2);
-    reg_ro!(gas_r_lsb_1, fields::GasRLsb1);
-    reg_ro!(gas_r_msb_1, u8);
-    reg_ro!(hum_lsb_1, u8);
-    reg_ro!(hum_msb_1, u8);
-    reg_ro!(temp_xlsb_1, fields::TempXlsb1);
-    reg_ro!(temp_lsb_1, u8);
-    reg_ro!(temp_msb_1, u8);
-    reg_ro!(press_xlsb_1, fields::PressXlsb1);
-    reg_ro!(press_lsb_1, u8);
-    reg_ro!(press_msb_1, u8);
-    reg_ro!(sub_meas_index_1, u8);
-    reg_ro!(meas_status_1, fields::MeasStatus1);
-    reg_ro!(gas_r_lsb_0, fields::GasRLsb0);
-    reg_ro!(gas_r_msb_0, u8);
-    reg_ro!(hum_lsb_0, u8);
-    reg_ro!(hum_msb_0, u8);
-    reg_ro!(temp_xlsb_0, fields::TempXlsb0);
-    reg_ro!(temp_lsb_0, u8);
-    reg_ro!(temp_msb_0, u8);
-    reg_ro!(press_xlsb_0, fields::PressXlsb0);
-    reg_ro!(press_lsb_0, u8);
-    reg_ro!(press_msb_0, u8);
     reg_ro!(sub_meas_index_0, u8);
     reg_ro!(meas_status_0, fields::MeasStatus0);
+    reg_ro!(sub_meas_index_2, u8);
+    reg_ro!(meas_status_2, fields::MeasStatus2);
+    reg_ro!(sub_meas_index_1, u8);
+    reg_ro!(meas_status_1, fields::MeasStatus1);
     reg_ro!(temp_adc_0_lsb, u8);
     reg_ro!(temp_adc_0_msb, u8);
     reg_ro!(temp_adc_0_xlsb, u8);
@@ -197,38 +210,4 @@ where
     reg_ro!(gas_range_0, u8);
     reg_ro!(gas_range_1, u8);
     reg_ro!(gas_range_2, u8);
-
-    reg_ro!(par_h1_lsb, u8);
-    reg_ro!(par_h1_msb, u8);
-
-    pub fn get_par_h1(&mut self) -> Result<u16> {
-        match self.par_h1 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h1_lsb = self.read_par_h1_lsb()? & 0b0000_1111;
-                let par_h1_msb = self.read_par_h1_msb()?;
-                let par_h1 = (par_h1_msb as u16) << 4 | par_h1_lsb as u16;
-
-                self.par_h1 = Some(par_h1);
-                Ok(par_h1)
-            }
-        }
-    }
-
-    reg_ro!(par_h2_lsb, u8);
-    reg_ro!(par_h2_msb, u8);
-
-    pub fn get_par_h2(&mut self) -> Result<u16> {
-        match self.par_h2 {
-            Some(v) => Ok(v),
-            None => {
-                let par_h2_lsb = self.read_par_h2_lsb()? & 0b1111_0000;
-                let par_h2_msb = self.read_par_h2_msb()?;
-                let par_h2 = (par_h2_msb as u16) << 4 | (par_h2_lsb >> 4) as u16;
-
-                self.par_h2 = Some(par_h2);
-                Ok(par_h2)
-            }
-        }
-    }
 }
