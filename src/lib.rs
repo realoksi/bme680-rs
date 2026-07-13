@@ -185,4 +185,14 @@ where
     reg_ro!(gas_range_0, u8);
     reg_ro!(gas_range_1, u8);
     reg_ro!(gas_range_2, u8);
+
+    /// A diagnostic operation that performs a single 256-byte burst read over the whole range of
+    /// addresses.
+    ///
+    /// Useful for taking a snapshot of the chips current state.
+    pub fn diag_dump(&mut self) -> Result<[u8; 256]> {
+        let mut res = [0; 256];
+        self.transport_layer.read_block(0, &mut res)?;
+        Ok(res)
+    }
 }
