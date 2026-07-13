@@ -150,6 +150,10 @@ where
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
+    live_ro!(gas_r_0, [gas_r_msb_0, gas_r_lsb_0], |msb, lsb| (msb as u16)
+        << 2
+        | (lsb as u16) >> 6);
+
     live_ro!(
         temp_adc_0,
         [temp_msb_0, temp_lsb_0, temp_xlsb_0],
