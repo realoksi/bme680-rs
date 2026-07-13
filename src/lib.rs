@@ -12,12 +12,7 @@ pub type Result<T> = core::result::Result<T, ()>;
 
 pub trait Layer {
     fn read_byte(&mut self, addr: u8) -> Result<u8>;
-    fn read_block(&mut self, addr: u8, data: &mut [u8]) -> Result<()> {
-        for (i, k) in data.iter_mut().enumerate() {
-            *k = self.read_byte(addr + (i as u8))?;
-        }
-        Ok(())
-    }
+    fn read_block(&mut self, addr: u8, data: &mut [u8]) -> Result<()>;
     fn write_byte(&mut self, addr: u8, data: u8) -> Result<()>;
 }
 
