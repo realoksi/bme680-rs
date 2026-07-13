@@ -175,12 +175,6 @@ where
     reg_ro!(meas_status_2, fields::MeasStatus2);
     reg_ro!(sub_meas_index_1, u8);
     reg_ro!(meas_status_1, fields::MeasStatus1);
-    reg_ro!(hum_adc_0_lsb, u8);
-    reg_ro!(hum_adc_0_msb, u8);
-    reg_ro!(hum_adc_1_lsb, u8);
-    reg_ro!(hum_adc_1_msb, u8);
-    reg_ro!(hum_adc_2_lsb, u8);
-    reg_ro!(hum_adc_2_msb, u8);
     reg_ro!(res_heat_range, u8);
     reg_ro!(res_heat_val, u8);
     reg_ro!(gas_range_0, u8);
