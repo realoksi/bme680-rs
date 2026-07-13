@@ -115,15 +115,15 @@ where
     once_ro!(par_g3);
 
     live_ro!(gas_r_2, [gas_r_msb_2, gas_r_lsb_2], |msb, lsb| (msb as u16) << 2 | (lsb as u16) >> 6);
-    live_ro!(hum_0, [hum_msb_0, hum_lsb_0]);
+    live_ro!(hum_adc_0, [hum_msb_0, hum_lsb_0]);
 
     live_ro!(
-        temp_2, [temp_msb_2, temp_lsb_2, temp_xlsb_2],
+        temp_adc_2, [temp_msb_2, temp_lsb_2, temp_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        press_2, [press_msb_2, press_lsb_2, press_xlsb_2],
+        press_adc_2, [press_msb_2, press_lsb_2, press_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
@@ -132,17 +132,17 @@ where
         |msb, lsb| (msb as u16) << 2 | (lsb as u16) >> 6
     );
 
-    live_ro!(hum_1, [hum_msb_1, hum_lsb_1]);
+    live_ro!(hum_adc_1, [hum_msb_1, hum_lsb_1]);
 
     live_ro!(
-        temp_1, [temp_msb_1, temp_lsb_1, temp_xlsb_1],
+        temp_adc_1, [temp_msb_1, temp_lsb_1, temp_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
-    live_ro!(hum_2, [hum_msb_2, hum_lsb_2]);
+    live_ro!(hum_adc_2, [hum_msb_2, hum_lsb_2]);
 
     live_ro!(
-        press_1, [press_msb_1, press_lsb_1, press_xlsb_1],
+        press_adc_1, [press_msb_1, press_lsb_1, press_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
@@ -152,12 +152,12 @@ where
     );
 
     live_ro!(
-        temp_0, [temp_msb_0, temp_lsb_0, temp_xlsb_0],
+        temp_adc_0, [temp_msb_0, temp_lsb_0, temp_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        press_0, [press_msb_0, press_lsb_0, press_xlsb_0],
+        press_adc_0, [press_msb_0, press_lsb_0, press_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
