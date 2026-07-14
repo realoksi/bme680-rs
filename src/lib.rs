@@ -8,6 +8,8 @@ mod impls;
 mod macros;
 mod memory_map;
 
+pub use fields::*;
+
 pub type Result<T> = core::result::Result<T, ()>;
 
 pub trait Layer {
