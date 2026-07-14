@@ -168,20 +168,20 @@ where
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
-    reg_rw!(status, fields::Status);
+    reg_rw!(status, Status);
     reg_rw!(reset, u8);
-    reg_rw!(config, fields::Config);
-    reg_rw!(ctrl_meas, fields::CtrlMeas);
-    reg_rw!(ctrl_hum, fields::CtrlHum);
-    reg_rw!(ctrl_gas_1, fields::CtrlGas1);
-    reg_rw!(ctrl_gas_0, fields::CtrlGas0);
+    reg_rw!(config, Config);
+    reg_rw!(ctrl_meas, CtrlMeas);
+    reg_rw!(ctrl_hum, CtrlHum);
+    reg_rw!(ctrl_gas_1, CtrlGas1);
+    reg_rw!(ctrl_gas_0, CtrlGas0);
     reg_rw!(gas_wait_shared, u8);
     reg_ro!(sub_meas_index_0, u8);
-    reg_ro!(meas_status_0, fields::MeasStatus0);
+    reg_ro!(meas_status_0, MeasStatus0);
     reg_ro!(sub_meas_index_2, u8);
-    reg_ro!(meas_status_2, fields::MeasStatus2);
+    reg_ro!(meas_status_2, MeasStatus2);
     reg_ro!(sub_meas_index_1, u8);
-    reg_ro!(meas_status_1, fields::MeasStatus1);
+    reg_ro!(meas_status_1, MeasStatus1);
     reg_ro!(res_heat_range, u8);
     reg_ro!(res_heat_val, u8);
     reg_ro!(gas_range_0, u8);
