@@ -186,6 +186,24 @@ where
     reg_ro!(gas_range_1, u8);
     reg_ro!(gas_range_2, u8);
 
+    pub fn get_t_fine_0(&mut self) -> Result<i32> {
+        let temp_adc_0 = self.get_temp_adc_0()? as i32;
+
+        let par_t1 = self.get_par_t1()? as i32;
+        let par_t2 = self.get_par_t2()? as i32;
+        let par_t3 = self.get_par_t3()? as i32;
+
+        let var1 = (temp_adc_0 >> 3) - (par_t1 << 1);
+        let var2 = (var1 * par_t2) >> 11;
+        let var3 = ((((var1 >> 1) * (var1 >> 1)) >> 12) * (par_t3 << 4)) >> 14;
+
+        Ok(var2 + var3)
+    }
+
+    pub fn get_temp_comp_0(&mut self) -> Result<i32> {
+        Ok(((self.get_t_fine_0()? * 5) + 128) >> 8)
+    }
+
     /// A diagnostic operation that performs a single 256-byte burst read over the whole range of
     /// addresses.
     ///
