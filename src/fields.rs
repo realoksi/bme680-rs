@@ -50,30 +50,6 @@ bitfield! {
 
 bitfield! {
     #[derive(Debug, From, Into)]
-    pub struct GasRLsb2(u8);
-
-    pub get_gas_r, _: 7, 6;
-    pub get_gas_valid_r, _: 5, 5;
-    pub get_heat_stab_r, _: 4, 4;
-    pub get_gas_range_r, _: 3, 0;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
-    pub struct TempXlsb2(u8);
-
-    pub get_temp_xlsb, _: 7, 4;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
-    pub struct PressXlsb2(u8);
-
-    pub get_press_xlsb, _: 7, 4;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
     pub struct MeasStatus2(u8);
 
     pub get_new_data, _: 7, 7;
@@ -84,50 +60,12 @@ bitfield! {
 
 bitfield! {
     #[derive(Debug, From, Into)]
-    pub struct GasRLsb1(u8);
-
-    pub get_gas_r, _: 7, 6;
-    pub get_gas_valid_r, _: 5, 5;
-    pub get_heat_stab_r, _: 4, 4;
-    pub get_gas_range_r, _: 3, 0;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
-    pub struct TempXlsb1(u8);
-
-    pub get_temp_xlsb, _: 7, 4;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
-    pub struct PressXlsb1(u8);
-
-    pub get_press_xlsb, _: 7, 4;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
     pub struct MeasStatus1(u8);
 
     pub get_new_data, _: 7, 7;
     pub get_gas_measuring, _: 6, 6;
     pub get_measuring, _: 5, 5;
     pub get_gas_meas_index_1, _: 3, 0;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
-    pub struct TempXlsb0(u8);
-
-    pub get_temp_xlsb, _: 7, 4;
-}
-
-bitfield! {
-    #[derive(Debug, From, Into)]
-    pub struct PressXlsb0(u8);
-
-    pub get_press_xlsb, _: 7, 4;
 }
 
 bitfield! {
