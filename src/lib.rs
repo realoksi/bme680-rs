@@ -118,15 +118,21 @@ where
     live_ro!(gas_r_2, [gas_r_msb_2, gas_r_lsb_2], |msb, lsb| (msb as u16)
         << 2
         | (lsb as u16) >> 6);
-    live_ro!(hum_adc_0, [hum_msb_0, hum_lsb_0]);
+    live_ro!(
+        /// Gets the raw humidity value for field 0.
+        hum_adc_0,
+        [hum_msb_0, hum_lsb_0]
+    );
 
     live_ro!(
+        /// Gets the raw temperature value for field 2.
         temp_adc_2,
         [temp_msb_2, temp_lsb_2, temp_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
+        /// Gets the raw pressure value for field 2.
         press_adc_2,
         [press_msb_2, press_lsb_2, press_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -136,17 +142,27 @@ where
         << 2
         | (lsb as u16) >> 6);
 
-    live_ro!(hum_adc_1, [hum_msb_1, hum_lsb_1]);
+    live_ro!(
+        /// Gets the raw humidity value for field 1.
+        hum_adc_1,
+        [hum_msb_1, hum_lsb_1]
+    );
 
     live_ro!(
+        /// Gets the raw temperature value for field 1.
         temp_adc_1,
         [temp_msb_1, temp_lsb_1, temp_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
-    live_ro!(hum_adc_2, [hum_msb_2, hum_lsb_2]);
+    live_ro!(
+        /// Gets the raw humidity value for field 2.
+        hum_adc_2,
+        [hum_msb_2, hum_lsb_2]
+    );
 
     live_ro!(
+        /// Gets the raw pressure value for field 1.
         press_adc_1,
         [press_msb_1, press_lsb_1, press_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -157,12 +173,14 @@ where
         | (lsb as u16) >> 6);
 
     live_ro!(
+        /// Gets the raw temperature value for field 0.
         temp_adc_0,
         [temp_msb_0, temp_lsb_0, temp_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
+        /// Gets the raw pressure value for field 0.
         press_adc_0,
         [press_msb_0, press_lsb_0, press_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -206,6 +224,7 @@ where
         Ok(self.get_tfine(temp_adc_0)?)
     }
 
+    /// Gets the compensated temperature as a fixed-point value for field 0.
     pub fn get_temp_comp_0(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_0()? * 5) + 128) >> 8)
     }
@@ -216,7 +235,7 @@ where
         Ok(self.get_tfine(temp_adc_1)?)
     }
 
-    /// Gets the temperature reading in field 1 as a fixed point integer.
+    /// Gets the compensated temperature as a fixed-point value for field 1.
     pub fn get_temp_comp_1(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_1()? * 5) + 128) >> 8)
     }
@@ -227,7 +246,7 @@ where
         Ok(self.get_tfine(temp_adc_2)?)
     }
 
-    /// Gets the temperature reading in field 2 as a fixed-point integer.
+    /// Gets the compensated temperature as a fixed-point value for field 2.
     pub fn get_temp_comp_2(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_2()? * 5) + 128) >> 8)
     }
