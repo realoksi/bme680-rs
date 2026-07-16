@@ -2,6 +2,8 @@
 #![allow(non_camel_case_types)]
 #![allow(dead_code)]
 
+#![doc = include_str!("../README.md")]
+
 mod fields;
 #[cfg(any(feature = "embedded-hal"))]
 mod impls;
