@@ -3,16 +3,16 @@ macro_rules! reg_ro {
     ($(#[$doc:meta])* $name:ident) => {
         paste::paste! {
             $(#[$doc])*
-            pub fn [<read_ $name>](&mut self) -> Result<u8> {
-                Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
+            pub fn [<read_ $name>](&mut self) -> $crate::Result<u8> {
+                Ok($crate::memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
     };
     ($(#[$doc:meta])* $name:ident, $ty:ty) => {
         paste::paste! {
             $(#[$doc])*
-            pub fn [<read_ $name>](&mut self) -> Result<$ty> {
-                Ok(memory_map::$name::read(&mut self.transport_layer)?.into())
+            pub fn [<read_ $name>](&mut self) -> $crate::Result<$ty> {
+                Ok($crate::memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
     };
@@ -25,8 +25,8 @@ macro_rules! reg_rw {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<write_ $name>](&mut self, data: u8) -> Result<()> {
-                memory_map::$name::write(&mut self.transport_layer, data.into())
+            pub fn [<write_ $name>](&mut self, data: u8) -> $crate::Result<()> {
+                $crate::memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
     };
@@ -35,8 +35,8 @@ macro_rules! reg_rw {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<write_ $name>](&mut self, data: $ty) -> Result<()> {
-                memory_map::$name::write(&mut self.transport_layer, data.into())
+            pub fn [<write_ $name>](&mut self, data: $ty) -> $crate::Result<()> {
+                $crate::memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
     };
@@ -52,11 +52,11 @@ macro_rules! map {
             pub(crate) const fn get_addr() -> u8 {
                 $addr
             }
-            pub(crate) fn read<L: Layer>(transport_layer: &mut L) -> $crate::Result<u8> {
+            pub(crate) fn read<L: $crate::Layer>(transport_layer: &mut L) -> $crate::Result<u8> {
                 transport_layer.read_byte(Self::get_addr())
             }
             // TODO: This should be conditional. Not all registers are writable.
-            pub(crate) fn write<L: Layer>(transport_layer: &mut L, data: u8) -> $crate::Result<()> {
+            pub(crate) fn write<L: $crate::Layer>(transport_layer: &mut L, data: u8) -> $crate::Result<()> {
                 transport_layer.write_byte(Self::get_addr(), data)
             }
         }
@@ -70,7 +70,7 @@ macro_rules! once_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u8> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u8> {
                 match self.$name {
                     Some(v) => Ok(v),
                     None => {
@@ -89,7 +89,7 @@ macro_rules! once_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
                 match self.$name {
                     Some(v) => Ok(v),
                     None => {
@@ -110,7 +110,7 @@ macro_rules! once_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
                 match self.$name {
                     Some(v) => Ok(v),
                     None => {
@@ -135,7 +135,7 @@ macro_rules! live_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
                 let msb = self.[<read_ $msb>]()?;
                 let lsb = self.[<read_ $lsb>]()?;
                 let v = u16::from_le_bytes([lsb, msb]);
@@ -150,7 +150,7 @@ macro_rules! live_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u16> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
                 let $m = self.[<read_ $msb>]()?;
                 let $l = self.[<read_ $lsb>]()?;
 
@@ -165,7 +165,7 @@ macro_rules! live_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u32> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u32> {
                 let msb = self.[<read_ $msb>]()?;
                 let lsb = self.[<read_ $lsb>]()?;
                 let xlsb = self.[<read_ $xlsb>]()?;
@@ -183,7 +183,7 @@ macro_rules! live_ro {
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> Result<u32> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<u32> {
                 let $m = self.[<read_ $msb>]()?;
                 let $l = self.[<read_ $lsb>]()?;
                 let $x = self.[<read_ $xlsb>]()?;
