@@ -2,7 +2,10 @@ use crate::Layer;
 
 // TODO: Slave address 0x76 shouldn't be hardcoded.
 #[cfg(feature = "embedded-hal")]
-impl<T> Layer for T where T: embedded_hal::i2c::I2c {
+impl<T> Layer for T
+where
+    T: embedded_hal::i2c::I2c,
+{
     fn read_byte(&mut self, addr: u8) -> crate::Result<u8> {
         let mut data: [u8; 1] = [0];
         self.write_read(0x76, &[addr], &mut data).map_err(|_| ())?;

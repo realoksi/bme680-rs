@@ -1,4 +1,4 @@
-use crate::{map, Layer};
+use crate::{Layer, map};
 
 map!(chip_id, 0xD0);
 map!(config, 0x75);
