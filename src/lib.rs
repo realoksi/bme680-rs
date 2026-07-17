@@ -87,6 +87,10 @@ where
     }
 
     once_ro!(chip_id);
+    pub fn into_inner(self) -> L {
+        self.transport_layer
+    }
+
     once_ro!(variant_id);
     once_ro!(par_t1, [par_t1_msb, par_t1_lsb]);
     once_ro!(par_t2, [par_t2_msb, par_t2_lsb]);
