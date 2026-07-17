@@ -236,7 +236,7 @@ where
     }
 
     fn get_t_fine_1(&mut self) -> Result<i32> {
-        let temp_adc_1 = self.get_temp_adc_0()? as i32;
+        let temp_adc_1 = self.get_temp_adc_1()? as i32;
 
         Ok(self.get_tfine(temp_adc_1)?)
     }
