@@ -1,7 +1,6 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 #![allow(dead_code)]
-
 #![doc = include_str!("../README.md")]
 
 mod fields;
@@ -120,6 +119,7 @@ where
     live_ro!(gas_r_2, [gas_r_msb_2, gas_r_lsb_2], |msb, lsb| (msb as u16)
         << 2
         | (lsb as u16) >> 6);
+
     live_ro!(
         /// Gets the raw humidity value for field 0.
         hum_adc_0,
