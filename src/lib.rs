@@ -88,21 +88,6 @@ where
         self.transport_layer
     }
 
-    once_ro!(variant_id);
-    once_ro!(par_t1, [par_t1_msb, par_t1_lsb]);
-    once_ro!(par_t2, [par_t2_msb, par_t2_lsb]);
-    once_ro!(par_t3);
-    once_ro!(par_p1, [par_p1_msb, par_p1_lsb]);
-    once_ro!(par_p2, [par_p2_msb, par_p2_lsb]);
-    once_ro!(par_p3);
-    once_ro!(par_p4, [par_p4_msb, par_p4_lsb]);
-    once_ro!(par_p5, [par_p5_msb, par_p5_lsb]);
-    once_ro!(par_p6);
-    once_ro!(par_p7);
-    once_ro!(par_p8, [par_p8_msb, par_p8_lsb]);
-    once_ro!(par_p9, [par_p9_msb, par_p9_lsb]);
-    once_ro!(par_p10);
-    once_ro!(par_h1, [par_h1_msb, par_h1_lsb], |msb, lsb| (msb as u16)
     once_ro!(
         /// Returns the chip ID. For BME68x devices, this value will always be `0x61`.
         chip_id
