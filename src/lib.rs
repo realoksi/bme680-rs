@@ -3,13 +3,10 @@
 #![allow(dead_code)]
 #![doc = include_str!("../README.md")]
 
-mod fields;
 #[cfg(any(feature = "embedded-hal"))]
 mod impls;
 mod macros;
 mod memory_map;
-
-pub use fields::*;
 
 pub type Result<T> = core::result::Result<T, ()>;
 
@@ -290,20 +287,20 @@ where
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
-    reg_rw!(status, Status);
+    reg_rw!(status, u8);
     reg_rw!(reset, u8);
-    reg_rw!(config, Config);
-    reg_rw!(ctrl_meas, CtrlMeas);
-    reg_rw!(ctrl_hum, CtrlHum);
-    reg_rw!(ctrl_gas_1, CtrlGas1);
-    reg_rw!(ctrl_gas_0, CtrlGas0);
+    reg_rw!(config, u8);
+    reg_rw!(ctrl_meas, u8);
+    reg_rw!(ctrl_hum, u8);
+    reg_rw!(ctrl_gas_1, u8);
+    reg_rw!(ctrl_gas_0, u8);
     reg_rw!(gas_wait_shared, u8);
     reg_ro!(sub_meas_index_0, u8);
-    reg_ro!(meas_status_0, MeasStatus0);
+    reg_ro!(meas_status_0, u8);
     reg_ro!(sub_meas_index_2, u8);
-    reg_ro!(meas_status_2, MeasStatus2);
+    reg_ro!(meas_status_2, u8);
     reg_ro!(sub_meas_index_1, u8);
-    reg_ro!(meas_status_1, MeasStatus1);
+    reg_ro!(meas_status_1, u8);
     reg_ro!(res_heat_range, u8);
     reg_ro!(res_heat_val, u8);
     reg_ro!(gas_range_0, u8);
