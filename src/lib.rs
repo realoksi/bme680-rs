@@ -86,7 +86,7 @@ where
         }
     }
 
-    once_ro!(chip_id);
+    /// Consumes `self` and returns the underlying transport layer.
     pub fn into_inner(self) -> L {
         self.transport_layer
     }
@@ -106,39 +106,137 @@ where
     once_ro!(par_p9, [par_p9_msb, par_p9_lsb]);
     once_ro!(par_p10);
     once_ro!(par_h1, [par_h1_msb, par_h1_lsb], |msb, lsb| (msb as u16)
+    once_ro!(
+        /// Returns the chip ID. For BME68x devices, this value will always be `0x61`.
+        chip_id
+    );
+    once_ro!(
+        /// Returns the variant ID. For the BME688, this value will be `0x01`.
+        variant_id
+    );
+    once_ro!(
+        /// Returns temperature calibration parameter 1.
+        par_t1,
+        [par_t1_msb, par_t1_lsb]
+    );
+    once_ro!(
+        /// Returns temperature calibration parameter 2.
+        par_t2,
+        [par_t2_msb, par_t2_lsb]
+    );
+    once_ro!(
+        /// Returns temperature calibration parameter 3.
+        par_t3
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 1.
+        par_p1,
+        [par_p1_msb, par_p1_lsb]
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 2.
+        par_p2,
+        [par_p2_msb, par_p2_lsb]
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 3.
+        par_p3
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 4.
+        par_p4,
+        [par_p4_msb, par_p4_lsb]
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 5.
+        par_p5, [par_p5_msb, par_p5_lsb]);
+    once_ro!(
+        /// Returns pressure calibration parameter 6.
+        par_p6
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 7.
+        par_p7
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 8.
+        par_p8,
+        [par_p8_msb, par_p8_lsb]
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 9.
+        par_p9,
+        [par_p9_msb, par_p9_lsb]
+    );
+    once_ro!(
+        /// Returns pressure calibration parameter 10.
+        par_p10
+    );
+    once_ro!(
+        /// Returns humidity calibration parameter 1.
+        par_h1,
+        [par_h1_msb, par_h1_lsb], |msb, lsb| (msb as u16)
         << 4
         | (lsb as u16) & 0b0000_1111);
-    once_ro!(par_h2, [par_h2_msb, par_h2_lsb], |msb, lsb| (msb as u16)
+    once_ro!(
+        /// Returns humidity calibration parameter 2.
+        par_h2,
+        [par_h2_msb, par_h2_lsb], |msb, lsb| (msb as u16)
         << 4
         | (lsb as u16) >> 4);
-    once_ro!(par_h3);
-    once_ro!(par_h4);
-    once_ro!(par_h5);
-    once_ro!(par_h6);
-    once_ro!(par_h7);
-    once_ro!(par_g1);
-    once_ro!(par_g2, [par_g2_msb, par_g2_lsb]);
-    once_ro!(par_g3);
+    once_ro!(
+        /// Returns humidity calibration parameter 3.
+        par_h3
+    );
+    once_ro!(
+        /// Returns humidity calibration parameter 4.
+        par_h4
+    );
+    once_ro!(
+        /// Returns humidity calibration parameter 5.
+        par_h5
+    );
+    once_ro!(
+        /// Returns humidity calibration parameter 6.
+        par_h6
+    );
+    once_ro!(
+        /// Returns humidity calibration parameter 7.
+        par_h7
+    );
+    once_ro!(
+        /// Returns gas calibration parameter 1.
+        par_g1
+    );
+    once_ro!(
+        /// Returns gas calibration parameter 2.
+        par_g2,
+        [par_g2_msb, par_g2_lsb]
+    );
+    once_ro!(
+        /// Returns gas calibration parameter 3.
+        par_g3
+    );
 
     live_ro!(gas_r_2, [gas_r_msb_2, gas_r_lsb_2], |msb, lsb| (msb as u16)
         << 2
         | (lsb as u16) >> 6);
 
     live_ro!(
-        /// Gets the raw humidity value for field 0.
+        /// Returns raw humidity value 0.
         hum_adc_0,
         [hum_msb_0, hum_lsb_0]
     );
 
     live_ro!(
-        /// Gets the raw temperature value for field 2.
+        /// Returns raw temperature value 2.
         temp_adc_2,
         [temp_msb_2, temp_lsb_2, temp_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        /// Gets the raw pressure value for field 2.
+        /// Returns raw pressure value 2.
         press_adc_2,
         [press_msb_2, press_lsb_2, press_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -149,26 +247,26 @@ where
         | (lsb as u16) >> 6);
 
     live_ro!(
-        /// Gets the raw humidity value for field 1.
+        /// Returns raw humidity value 1.
         hum_adc_1,
         [hum_msb_1, hum_lsb_1]
     );
 
     live_ro!(
-        /// Gets the raw temperature value for field 1.
+        /// Returns raw temperature value 1.
         temp_adc_1,
         [temp_msb_1, temp_lsb_1, temp_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        /// Gets the raw humidity value for field 2.
+        /// Returns raw humidity value 2.
         hum_adc_2,
         [hum_msb_2, hum_lsb_2]
     );
 
     live_ro!(
-        /// Gets the raw pressure value for field 1.
+        /// Returns raw pressure value 1.
         press_adc_1,
         [press_msb_1, press_lsb_1, press_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -179,14 +277,14 @@ where
         | (lsb as u16) >> 6);
 
     live_ro!(
-        /// Gets the raw temperature value for field 0.
+        /// Returns raw temperature value 0.
         temp_adc_0,
         [temp_msb_0, temp_lsb_0, temp_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        /// Gets the raw pressure value for field 0.
+        /// Returns raw pressure value 0.
         press_adc_0,
         [press_msb_0, press_lsb_0, press_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -230,7 +328,7 @@ where
         Ok(self.get_tfine(temp_adc_0)?)
     }
 
-    /// Gets the compensated temperature as a fixed-point value for field 0.
+    /// Returns the compensated temperature as a fixed-point value for field 0.
     pub fn get_temp_comp_0(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_0()? * 5) + 128) >> 8)
     }
@@ -241,7 +339,7 @@ where
         Ok(self.get_tfine(temp_adc_1)?)
     }
 
-    /// Gets the compensated temperature as a fixed-point value for field 1.
+    /// Returns the compensated temperature as a fixed-point value for field 1.
     pub fn get_temp_comp_1(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_1()? * 5) + 128) >> 8)
     }
@@ -252,7 +350,7 @@ where
         Ok(self.get_tfine(temp_adc_2)?)
     }
 
-    /// Gets the compensated temperature as a fixed-point value for field 2.
+    /// Returns the compensated temperature as a fixed-point value for field 2.
     pub fn get_temp_comp_2(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_2()? * 5) + 128) >> 8)
     }
