@@ -32,6 +32,35 @@ where
     }
 }
 
+pub enum Filter {
+    X0 = 0b000,
+    X1 = 0b001,
+    X3 = 0b010,
+    X7 = 0b011,
+    X15 = 0b100,
+    X31 = 0b101,
+    X63 = 0b110,
+    X127 = 0b111,
+}
+
+impl TryFrom<u8> for Filter {
+    type Error = ();
+
+    fn try_from(value: u8) -> Result<Filter> {
+        Ok(match value {
+            0b000 => Filter::X0,
+            0b001 => Filter::X1,
+            0b010 => Filter::X3,
+            0b011 => Filter::X7,
+            0b100 => Filter::X15,
+            0b101 => Filter::X31,
+            0b110 => Filter::X63,
+            0b111 => Filter::X7,
+            _ => return Err(()),
+        })
+    }
+}
+
 pub struct BME680<L>
 where
     L: Layer,
@@ -289,8 +318,45 @@ where
     );
 
     reg_rw!(status, u8);
+
+    pub fn get_spi_mem_page(&mut self) -> Result<bool> {
+        Ok(((self.read_status()? & 0b0001_0000) >> 4) != 0)
+    }
+
+    pub fn set_spi_mem_page(&mut self, value: bool) -> Result<()> {
+        let status = (self.read_status()? & !0b0001_0000) | ((value as u8) << 4);
+
+        self.write_status(status)
+    }
+
     reg_rw!(reset, u8);
+
+    pub fn soft_reset(&mut self) -> Result<()> {
+        self.write_reset(0xB6)
+    }
+
     reg_rw!(config, u8);
+
+    pub fn get_filter(&mut self) -> Result<Filter> {
+        Ok(Filter::try_from((self.read_config()? & 0b0001_1100) >> 2)?)
+    }
+
+    pub fn set_filter(&mut self, value: Filter) -> Result<()> {
+        let config = (self.read_config()? & !0b0001_1100) | ((value as u8) << 2);
+
+        self.write_config(config)
+    }
+
+    pub fn get_spi_3w_en(&mut self) -> Result<bool> {
+        Ok((self.read_config()? & 0b1) != 0)
+    }
+
+    pub fn set_spi_3w_en(&mut self, value: bool) -> Result<()> {
+        let config = (self.read_config()? & !0b1) | (value as u8);
+
+        self.write_config(config)
+    }
+
     reg_rw!(ctrl_meas, u8);
     reg_rw!(ctrl_hum, u8);
     reg_rw!(ctrl_gas_1, u8);
