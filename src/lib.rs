@@ -61,6 +61,50 @@ impl TryFrom<u8> for Filter {
     }
 }
 
+pub enum Oversampling {
+    X0 = 0b000,
+    X1 = 0b001,
+    X2 = 0b010,
+    X4 = 0b011,
+    X8 = 0b100,
+    X16 = 0b101,
+}
+
+impl TryFrom<u8> for Oversampling {
+    type Error = ();
+
+    fn try_from(value: u8) -> Result<Oversampling> {
+        Ok(match value {
+            0b000 => Oversampling::X0,
+            0b001 => Oversampling::X1,
+            0b010 => Oversampling::X2,
+            0b011 => Oversampling::X4,
+            0b100 => Oversampling::X8,
+            0b101 => Oversampling::X16,
+            _ => return Err(()),
+        })
+    }
+}
+
+pub enum Mode {
+    Sleep = 0b00,
+    Forced = 0b01,
+    Parallel = 0b10,
+}
+
+impl TryFrom<u8> for Mode {
+    type Error = ();
+
+    fn try_from(value: u8) -> Result<Mode> {
+        Ok(match value {
+            0b00 => Mode::Sleep,
+            0b01 => Mode::Forced,
+            0b10 => Mode::Parallel,
+            _ => return Err(()),
+        })
+    }
+}
+
 pub struct BME680<L>
 where
     L: Layer,
