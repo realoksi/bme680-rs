@@ -382,7 +382,7 @@ where
     reg_rw!(config, u8);
 
     pub fn get_filter(&mut self) -> Result<Filter> {
-        Ok(Filter::try_from((self.read_config()? & 0b0001_1100) >> 2)?)
+        Filter::try_from((self.read_config()? & 0b0001_1100) >> 2)
     }
 
     pub fn set_filter(&mut self, value: Filter) -> Result<()> {
