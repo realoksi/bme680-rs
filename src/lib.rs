@@ -402,6 +402,41 @@ where
     }
 
     reg_rw!(ctrl_meas, u8);
+
+    pub fn get_ctrl_meas(&mut self) -> Result<()> {
+        todo!()
+    }
+
+    pub fn get_osrs_t(&mut self) -> Result<Oversampling> {
+        Oversampling::try_from((self.read_ctrl_meas()? & 0b1110_0000) >> 5)
+    }
+
+    pub fn set_osrs_t(&mut self, value: Oversampling) -> Result<()> {
+        let ctrl_meas = (self.read_ctrl_meas()? & !0b1110_0000) | ((value as u8) << 5);
+
+        self.write_ctrl_meas(ctrl_meas)
+    }
+
+    pub fn get_osrs_p(&mut self) -> Result<Oversampling> {
+        Oversampling::try_from((self.read_ctrl_meas()? & 0b0001_1100) >> 2)
+    }
+
+    pub fn set_osrs_p(&mut self, value: Oversampling) -> Result<()> {
+        let ctrl_meas = (self.read_ctrl_meas()? & !0b0001_1100) | ((value as u8) << 2);
+
+        self.write_ctrl_meas(ctrl_meas)
+    }
+
+    pub fn get_mode(&mut self) -> Result<Mode> {
+        Mode::try_from(self.read_ctrl_meas()? & 0b11)
+    }
+
+    pub fn set_mode(&mut self, value: Mode) -> Result<()> {
+        let ctrl_meas = (self.read_ctrl_meas()? & !0b11) | (value as u8);
+
+        self.write_ctrl_meas(ctrl_meas)
+    }
+
     reg_rw!(ctrl_hum, u8);
     reg_rw!(ctrl_gas_1, u8);
     reg_rw!(ctrl_gas_0, u8);
