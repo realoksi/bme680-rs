@@ -454,6 +454,17 @@ where
     }
 
     reg_rw!(ctrl_hum, u8);
+
+    pub fn get_osrs_h(&mut self) -> Result<Oversampling> {
+        Oversampling::try_from(self.read_ctrl_hum()? & 0b0000_0111)
+    }
+
+    pub fn set_osrs_h(&mut self, value: Oversampling) -> Result<()> {
+        let ctrl_hum = (self.read_ctrl_hum()? & !0b0000_0111) | (value as u8);
+
+        self.write_ctrl_hum(ctrl_hum)
+    }
+
     reg_rw!(ctrl_gas_1, u8);
     reg_rw!(ctrl_gas_0, u8);
     reg_rw!(gas_wait_shared, u8);
