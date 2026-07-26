@@ -1,47 +1,50 @@
+/// maps a read method to an existing register
 #[macro_export]
 macro_rules! reg_ro {
-    ($(#[$doc:meta])* $name:ident) => {
+    ($(#[$doc:meta])* $vis:vis, $name:ident) => {
         paste::paste! {
             $(#[$doc])*
-            pub fn [<read_ $name>](&mut self) -> $crate::Result<u8> {
+            $vis fn [<read_ $name>](&mut self) -> $crate::Result<u8> {
                 Ok($crate::memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
     };
-    ($(#[$doc:meta])* $name:ident, $ty:ty) => {
+    ($(#[$doc:meta])* $vis:vis $name:ident, $ty:ty) => {
         paste::paste! {
             $(#[$doc])*
-            pub fn [<read_ $name>](&mut self) -> $crate::Result<$ty> {
+            $vis fn [<read_ $name>](&mut self) -> $crate::Result<$ty> {
                 Ok($crate::memory_map::$name::read(&mut self.transport_layer)?.into())
             }
         }
     };
 }
 
+/// maps read and write methods to an existing register
 #[macro_export]
 macro_rules! reg_rw {
-    ($(#[$doc:meta])* $name:ident) => {
+    ($(#[$doc:meta])* $vis:vis $name:ident) => {
         $crate::reg_ro!($name, u8);
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<write_ $name>](&mut self, data: u8) -> $crate::Result<()> {
+            $vis fn [<write_ $name>](&mut self, data: u8) -> $crate::Result<()> {
                 $crate::memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
     };
-    ($(#[$doc:meta])* $name:ident, $ty:ty) => {
+    ($(#[$doc:meta])* $vis:vis $name:ident, $ty:ty) => {
         $crate::reg_ro!($name, $ty);
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<write_ $name>](&mut self, data: $ty) -> $crate::Result<()> {
+            $vis fn [<write_ $name>](&mut self, data: $ty) -> $crate::Result<()> {
                 $crate::memory_map::$name::write(&mut self.transport_layer, data.into())
             }
         }
     };
 }
 
+/// maps registers to an address with owned read and write methods
 #[macro_export]
 macro_rules! map {
     ($(#[$doc:meta])* $name:ident, $addr:expr) => {
@@ -63,6 +66,7 @@ macro_rules! map {
     };
 }
 
+/// read-only register get method. cached
 #[macro_export]
 macro_rules! once_ro {
     ($(#[$doc:meta])* $name:ident) => {
@@ -127,6 +131,7 @@ macro_rules! once_ro {
     };
 }
 
+/// read-only register get method. no cache
 #[macro_export]
 macro_rules! live_ro {
     ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident]) => {
