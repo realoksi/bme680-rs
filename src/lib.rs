@@ -61,7 +61,7 @@ impl TryFrom<u8> for Filter {
             0b100 => Filter::X15,
             0b101 => Filter::X31,
             0b110 => Filter::X63,
-            0b111 => Filter::X7,
+            0b111 => Filter::X127,
             _ => return Err(()),
         })
     }
