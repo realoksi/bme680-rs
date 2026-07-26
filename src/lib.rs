@@ -498,6 +498,42 @@ where
         Ok(((self.get_t_fine_2()? * 5) + 128) >> 8)
     }
 
+    pub fn get_press_comp_0(&mut self) -> Result<u32> {
+        let mut var1 = (self.get_t_fine_0()? >> 1) - 64000;
+        let mut var2 = ((((var1 >> 2) * (var1 >> 2)) >> 11) * (self.get_par_p6()? as i32)) >> 2;
+
+        var2 = var2 + ((var1 * (self.get_par_p5()? as i32)) << 1);
+        var2 = (var2 >> 2) + ((self.get_par_p4()? as i32) << 16);
+        var1 = (((((var1 >> 2) * (var1 >> 2)) >> 13) * ((self.get_par_p3()? as i32) << 5)) >> 3)
+            + (((self.get_par_p2()? as i32) * var1) >> 1);
+        var1 = var1 >> 18;
+        var1 = ((32768 + var1) * (self.get_par_p1()? as i32)) >> 15;
+
+        let press_comp = 1048576 - self.get_press_adc_0()? as i32;
+        let mut press_comp = ((press_comp - (var2 >> 12)) * 3125) as u32;
+
+        if press_comp >= (1 << 30) {
+            press_comp = (press_comp / (var1 as u32)) << 1;
+        } else {
+            press_comp = (press_comp << 1) / var1 as u32;
+        }
+
+        var1 = ((self.get_par_p9()? as i32)
+            * ((((press_comp >> 3) * (press_comp >> 3)) >> 13) as i32))
+            >> 12;
+        var2 = (((press_comp >> 2) as i32) * (self.get_par_p8()? as i32)) >> 13;
+
+        let var3 = (((press_comp >> 8) as i32)
+            * ((press_comp >> 8) as i32)
+            * ((press_comp >> 8) as i32)
+            * (self.get_par_p10()? as i32))
+            >> 17;
+        let press_comp =
+            (press_comp as i32) + ((var1 + var2 + var3 + ((self.get_par_p7()? as i32) << 7)) >> 4);
+
+        Ok(press_comp as u32)
+    }
+
     /// A diagnostic operation that performs a single 256-byte burst read over the whole range of
     /// addresses.
     ///
