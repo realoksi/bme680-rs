@@ -32,14 +32,20 @@ where
     }
 }
 
+/// iir filter coefficient. useful for suppressing environmental disturbances
+///
+/// see [BME680::set_filter]
 pub enum Filter {
+    /// no filtering
     X0 = 0b000,
+    /// min filtering
     X1 = 0b001,
     X3 = 0b010,
     X7 = 0b011,
     X15 = 0b100,
     X31 = 0b101,
     X63 = 0b110,
+    /// max filtering
     X127 = 0b111,
 }
 
@@ -61,12 +67,18 @@ impl TryFrom<u8> for Filter {
     }
 }
 
+/// controls the bit resolution of a measurement. higher oversampling takes longer
+///
+/// see [BME680::set_osrs_t], [BME680::set_osrs_p], and [BME680::set_osrs_h]
 pub enum Oversampling {
+    /// skips the measurement
     X0 = 0b000,
+    /// min oversampling
     X1 = 0b001,
     X2 = 0b010,
     X4 = 0b011,
     X8 = 0b100,
+    /// max oversampling
     X16 = 0b101,
 }
 
@@ -86,9 +98,13 @@ impl TryFrom<u8> for Oversampling {
     }
 }
 
+/// sensor power mode
 pub enum Mode {
+    /// idle state
     Sleep = 0b00,
+    /// single measurements. goes back to sleep
     Forced = 0b01,
+    /// multiple measurements. stays awake
     Parallel = 0b10,
 }
 
@@ -178,114 +194,114 @@ where
     }
 
     once_ro!(
-        /// Returns the chip ID. For BME68x devices, this value will always be `0x61`.
+        /// returns the chip id
         chip_id
     );
     once_ro!(
-        /// Returns the variant ID. For the BME688, this value will be `0x01`.
+        /// returns the variant id
         variant_id
     );
     once_ro!(
-        /// Returns temperature calibration parameter 1.
+        /// returns first temp calibration parameter
         par_t1,
         [par_t1_msb, par_t1_lsb]
     );
     once_ro!(
-        /// Returns temperature calibration parameter 2.
+        /// returns second temp calibration parameter
         par_t2,
         [par_t2_msb, par_t2_lsb]
     );
     once_ro!(
-        /// Returns temperature calibration parameter 3.
+        /// returns third temp calibration parameter
         par_t3
     );
     once_ro!(
-        /// Returns pressure calibration parameter 1.
+        /// returns first pressure calibration parameter
         par_p1,
         [par_p1_msb, par_p1_lsb]
     );
     once_ro!(
-        /// Returns pressure calibration parameter 2.
+        /// returns second pressure calibration parameter
         par_p2,
         [par_p2_msb, par_p2_lsb]
     );
     once_ro!(
-        /// Returns pressure calibration parameter 3.
+        /// returns third pressure calibration parameter
         par_p3
     );
     once_ro!(
-        /// Returns pressure calibration parameter 4.
+        /// returns fourth pressure calibration parameter
         par_p4,
         [par_p4_msb, par_p4_lsb]
     );
     once_ro!(
-        /// Returns pressure calibration parameter 5.
+        /// returns fifth pressure calibration parameter
         par_p5, [par_p5_msb, par_p5_lsb]);
     once_ro!(
-        /// Returns pressure calibration parameter 6.
+        /// returns sixth pressure calibration parameter
         par_p6
     );
     once_ro!(
-        /// Returns pressure calibration parameter 7.
+        /// returns seventh pressure calibration parameter
         par_p7
     );
     once_ro!(
-        /// Returns pressure calibration parameter 8.
+        /// returns eighth pressure calibration parameter
         par_p8,
         [par_p8_msb, par_p8_lsb]
     );
     once_ro!(
-        /// Returns pressure calibration parameter 9.
+        /// returns ninth pressure calibration parameter
         par_p9,
         [par_p9_msb, par_p9_lsb]
     );
     once_ro!(
-        /// Returns pressure calibration parameter 10.
+        /// returns tenth pressure calibration parameter
         par_p10
     );
     once_ro!(
-        /// Returns humidity calibration parameter 1.
+        /// returns first humidity calibration parameter
         par_h1,
         [par_h1_msb, par_h1_lsb], |msb, lsb| (msb as u16)
         << 4
         | (lsb as u16) & 0b0000_1111);
     once_ro!(
-        /// Returns humidity calibration parameter 2.
+        /// returns second humidity calibration parameter
         par_h2,
         [par_h2_msb, par_h2_lsb], |msb, lsb| (msb as u16)
         << 4
         | (lsb as u16) >> 4);
     once_ro!(
-        /// Returns humidity calibration parameter 3.
+        /// returns third humidity calibration parameter
         par_h3
     );
     once_ro!(
-        /// Returns humidity calibration parameter 4.
+        /// returns fourth humidity calibration parameter
         par_h4
     );
     once_ro!(
-        /// Returns humidity calibration parameter 5.
+        /// returns fifth humidity calibration parameter
         par_h5
     );
     once_ro!(
-        /// Returns humidity calibration parameter 6.
+        /// returns sixth humidity calibration parameter
         par_h6
     );
     once_ro!(
-        /// Returns humidity calibration parameter 7.
+        /// returns seventh humidity calibration parameter
         par_h7
     );
     once_ro!(
-        /// Returns gas calibration parameter 1.
+        /// returns first gas calibration parameter
         par_g1
     );
     once_ro!(
-        /// Returns gas calibration parameter 2.
+        /// returns second gas calibration parameter
         par_g2,
         [par_g2_msb, par_g2_lsb]
     );
     once_ro!(
-        /// Returns gas calibration parameter 3.
+        /// returns third gas calibration parameter
         par_g3
     );
 
@@ -294,7 +310,7 @@ where
         | (lsb as u16) >> 6);
 
     live_ro!(
-        /// Returns raw humidity value 0.
+        /// returns raw humidity value in field 0
         hum_adc_0,
         [hum_msb_0, hum_lsb_0]
     );
@@ -471,7 +487,6 @@ where
         Ok(self.get_tfine(temp_adc_0)?)
     }
 
-    /// Returns the compensated temperature as a fixed-point value for field 0.
     pub fn get_temp_comp_0(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_0()? * 5) + 128) >> 8)
     }
@@ -482,7 +497,6 @@ where
         Ok(self.get_tfine(temp_adc_1)?)
     }
 
-    /// Returns the compensated temperature as a fixed-point value for field 1.
     pub fn get_temp_comp_1(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_1()? * 5) + 128) >> 8)
     }
@@ -493,7 +507,6 @@ where
         Ok(self.get_tfine(temp_adc_2)?)
     }
 
-    /// Returns the compensated temperature as a fixed-point value for field 2.
     pub fn get_temp_comp_2(&mut self) -> Result<i32> {
         Ok(((self.get_t_fine_2()? * 5) + 128) >> 8)
     }
