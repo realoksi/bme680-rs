@@ -129,28 +129,28 @@ where
     chip_id: Option<u8>,
     variant_id: Option<u8>,
     par_t1: Option<u16>,
-    par_t2: Option<u16>,
-    par_t3: Option<u8>,
+    par_t2: Option<i16>,
+    par_t3: Option<i8>,
     par_p1: Option<u16>,
-    par_p2: Option<u16>,
-    par_p3: Option<u8>,
-    par_p4: Option<u16>,
-    par_p5: Option<u16>,
-    par_p6: Option<u8>,
-    par_p7: Option<u8>,
-    par_p8: Option<u16>,
-    par_p9: Option<u16>,
+    par_p2: Option<i16>,
+    par_p3: Option<i8>,
+    par_p4: Option<i16>,
+    par_p5: Option<i16>,
+    par_p6: Option<i8>,
+    par_p7: Option<i8>,
+    par_p8: Option<i16>,
+    par_p9: Option<i16>,
     par_p10: Option<u8>,
     par_h1: Option<u16>,
     par_h2: Option<u16>,
-    par_h3: Option<u8>,
-    par_h4: Option<u8>,
-    par_h5: Option<u8>,
+    par_h3: Option<i8>,
+    par_h4: Option<i8>,
+    par_h5: Option<i8>,
     par_h6: Option<u8>,
     par_h7: Option<u8>,
-    par_g1: Option<u8>,
-    par_g2: Option<u16>,
-    par_g3: Option<u8>,
+    par_g1: Option<i8>,
+    par_g2: Option<i16>,
+    par_g3: Option<i8>,
 }
 
 impl<L> BME680<L>
@@ -204,55 +204,69 @@ where
     once_ro!(
         /// returns first temp calibration parameter
         par_t1,
+        u16,
         [par_t1_msb, par_t1_lsb]
     );
     once_ro!(
         /// returns second temp calibration parameter
         par_t2,
+        i16,
         [par_t2_msb, par_t2_lsb]
     );
     once_ro!(
         /// returns third temp calibration parameter
-        par_t3
+        par_t3,
+        i8
     );
     once_ro!(
         /// returns first pressure calibration parameter
         par_p1,
+        u16,
         [par_p1_msb, par_p1_lsb]
     );
     once_ro!(
         /// returns second pressure calibration parameter
         par_p2,
+        i16,
         [par_p2_msb, par_p2_lsb]
     );
     once_ro!(
         /// returns third pressure calibration parameter
-        par_p3
+        par_p3,
+        i8
     );
     once_ro!(
         /// returns fourth pressure calibration parameter
         par_p4,
+        i16,
         [par_p4_msb, par_p4_lsb]
     );
     once_ro!(
         /// returns fifth pressure calibration parameter
-        par_p5, [par_p5_msb, par_p5_lsb]);
+        par_p5,
+        i16,
+        [par_p5_msb, par_p5_lsb]
+    );
     once_ro!(
         /// returns sixth pressure calibration parameter
-        par_p6
+        par_p6,
+        i8
     );
     once_ro!(
         /// returns seventh pressure calibration parameter
-        par_p7
+        par_p7,
+        i8
     );
     once_ro!(
         /// returns eighth pressure calibration parameter
         par_p8,
+        i16,
         [par_p8_msb, par_p8_lsb]
     );
     once_ro!(
         /// returns ninth pressure calibration parameter
         par_p9,
+        i16,
         [par_p9_msb, par_p9_lsb]
     );
     once_ro!(
@@ -262,26 +276,30 @@ where
     once_ro!(
         /// returns first humidity calibration parameter
         par_h1,
-        [par_h1_msb, par_h1_lsb], |msb, lsb| (msb as u16)
-        << 4
-        | (lsb as u16) & 0b0000_1111);
+        u16,
+        [par_h1_msb, par_h1_lsb],
+        |msb, lsb| (msb as u16) << 4 | (lsb as u16) & 0b0000_1111);
     once_ro!(
         /// returns second humidity calibration parameter
         par_h2,
-        [par_h2_msb, par_h2_lsb], |msb, lsb| (msb as u16)
-        << 4
-        | (lsb as u16) >> 4);
+        u16,
+        [par_h2_msb, par_h2_lsb],
+        |msb, lsb| (msb as u16) << 4 | (lsb as u16) >> 4
+    );
     once_ro!(
         /// returns third humidity calibration parameter
-        par_h3
+        par_h3,
+        i8
     );
     once_ro!(
         /// returns fourth humidity calibration parameter
-        par_h4
+        par_h4,
+        i8
     );
     once_ro!(
         /// returns fifth humidity calibration parameter
-        par_h5
+        par_h5,
+        i8
     );
     once_ro!(
         /// returns sixth humidity calibration parameter
@@ -293,16 +311,19 @@ where
     );
     once_ro!(
         /// returns first gas calibration parameter
-        par_g1
+        par_g1,
+        i8
     );
     once_ro!(
         /// returns second gas calibration parameter
         par_g2,
+        i16,
         [par_g2_msb, par_g2_lsb]
     );
     once_ro!(
         /// returns third gas calibration parameter
-        par_g3
+        par_g3,
+        i8
     );
 
     live_ro!(gas_r_2, [gas_r_msb_2, gas_r_lsb_2], |msb, lsb| (msb as u16)

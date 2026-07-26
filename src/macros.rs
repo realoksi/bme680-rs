@@ -87,19 +87,16 @@ macro_rules! once_ro {
             }
         }
     };
-    ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident]) => {
-        $crate::reg_ro!($msb, u8);
-        $crate::reg_ro!($lsb, u8);
+    ($(#[$doc:meta])* $name:ident, $ty:ty) => {
+        $crate::reg_ro!($name, u8);
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<$ty> {
                 match self.$name {
                     Some(v) => Ok(v),
                     None => {
-                        let msb = self.[<read_ $msb>]()?;
-                        let lsb = self.[<read_ $lsb>]()?;
-                        let v = u16::from_le_bytes([lsb, msb]);
+                        let v = self.[<read_ $name>]()? as $ty;
 
                         self.$name = Some(v);
                         Ok(v)
@@ -108,19 +105,40 @@ macro_rules! once_ro {
             }
         }
     };
-    ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident], |$m:ident, $l:ident| $result:expr) => {
+    ($(#[$doc:meta])* $name:ident, $ty:ty, [$msb:ident, $lsb:ident]) => {
         $crate::reg_ro!($msb, u8);
         $crate::reg_ro!($lsb, u8);
 
         paste::paste! {
             $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<$ty> {
+                match self.$name {
+                    Some(v) => Ok(v),
+                    None => {
+                        let msb = self.[<read_ $msb>]()?;
+                        let lsb = self.[<read_ $lsb>]()?;
+                        let v = u16::from_le_bytes([lsb, msb]) as $ty;
+
+                        self.$name = Some(v);
+                        Ok(v)
+                    }
+                }
+            }
+        }
+    };
+    ($(#[$doc:meta])* $name:ident, $ty:ty, [$msb:ident, $lsb:ident], |$m:ident, $l:ident| $result:expr) => {
+        $crate::reg_ro!($msb, u8);
+        $crate::reg_ro!($lsb, u8);
+
+        paste::paste! {
+            $(#[$doc])*
+            pub fn [<get_ $name>](&mut self) -> $crate::Result<$ty> {
                 match self.$name {
                     Some(v) => Ok(v),
                     None => {
                         let $m = self.[<read_ $msb>]()?;
                         let $l = self.[<read_ $lsb>]()?;
-                        let v = $result;
+                        let v = $result as $ty;
 
                         self.$name = Some(v);
                         Ok(v)
