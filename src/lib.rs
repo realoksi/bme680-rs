@@ -330,21 +330,15 @@ where
         << 2
         | (lsb as u16) >> 6);
 
-    live_ro!(
-        /// returns raw humidity value in field 0
-        hum_adc_0,
-        [hum_msb_0, hum_lsb_0]
-    );
+    live_ro!(hum_adc_0, [hum_msb_0, hum_lsb_0]);
 
     live_ro!(
-        /// Returns raw temperature value 2.
         temp_adc_2,
         [temp_msb_2, temp_lsb_2, temp_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        /// Returns raw pressure value 2.
         press_adc_2,
         [press_msb_2, press_lsb_2, press_xlsb_2],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -354,27 +348,17 @@ where
         << 2
         | (lsb as u16) >> 6);
 
-    live_ro!(
-        /// Returns raw humidity value 1.
-        hum_adc_1,
-        [hum_msb_1, hum_lsb_1]
-    );
+    live_ro!(hum_adc_1, [hum_msb_1, hum_lsb_1]);
 
     live_ro!(
-        /// Returns raw temperature value 1.
         temp_adc_1,
         [temp_msb_1, temp_lsb_1, temp_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
-    live_ro!(
-        /// Returns raw humidity value 2.
-        hum_adc_2,
-        [hum_msb_2, hum_lsb_2]
-    );
+    live_ro!(hum_adc_2, [hum_msb_2, hum_lsb_2]);
 
     live_ro!(
-        /// Returns raw pressure value 1.
         press_adc_1,
         [press_msb_1, press_lsb_1, press_xlsb_1],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
@@ -385,14 +369,12 @@ where
         | (lsb as u16) >> 6);
 
     live_ro!(
-        /// Returns raw temperature value 0.
         temp_adc_0,
         [temp_msb_0, temp_lsb_0, temp_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4
     );
 
     live_ro!(
-        /// Returns raw pressure value 0.
         press_adc_0,
         [press_msb_0, press_lsb_0, press_xlsb_0],
         |msb, lsb, xlsb| (msb as u32) << 12 | (lsb as u32) << 4 | (xlsb as u32) >> 4

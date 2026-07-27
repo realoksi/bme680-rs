@@ -149,69 +149,56 @@ macro_rules! once_ro {
     };
 }
 
-/// read-only register get method. no cache
+#[macro_export]
+macro_rules! bit_pack {
+    ($msb:ident, $lsb:ident $(, $ty:ty)?) => {
+        u16::from_le_bytes([$lsb, $msb]) $(as $ty)?
+    };
+    ($msb:ident, $lsb:ident, $xlsb:ident $(, $ty:ty)?) => {
+        u32::from_le_bytes([$xlsb, $lsb, $msb, 0]) $(as $ty)?
+    };
+}
+
 #[macro_export]
 macro_rules! live_ro {
-    ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident]) => {
+    ($(#[$attr:meta])* $name:ident, [$msb:ident, $lsb:ident]) => {
         $crate::reg_ro!($msb, u8);
         $crate::reg_ro!($lsb, u8);
-
         paste::paste! {
-            $(#[$doc])*
+            $(#[$attr])*
             pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
                 let msb = self.[<read_ $msb>]()?;
                 let lsb = self.[<read_ $lsb>]()?;
-                let v = u16::from_le_bytes([lsb, msb]);
 
-                Ok(v)
+                Ok(bit_pack!(msb, lsb))
             }
         }
     };
-    ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident], |$m:ident, $l:ident| $result:expr) => {
+    ($(#[$attr:meta])* $name:ident, [$msb:ident, $lsb:ident], |$m:ident, $l:ident| $res:expr) => {
         $crate::reg_ro!($msb, u8);
         $crate::reg_ro!($lsb, u8);
-
         paste::paste! {
-            $(#[$doc])*
+            $(#[$attr])*
             pub fn [<get_ $name>](&mut self) -> $crate::Result<u16> {
                 let $m = self.[<read_ $msb>]()?;
                 let $l = self.[<read_ $lsb>]()?;
 
-                Ok($result)
+                Ok($res)
             }
         }
     };
-    ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident, $xlsb:ident]) => {
+    ($(#[$attr:meta])* $name:ident, [$msb:ident, $lsb:ident, $xlsb:ident], |$m:ident, $l:ident, $x:ident| $res:expr) => {
         $crate::reg_ro!($msb, u8);
         $crate::reg_ro!($lsb, u8);
         $crate::reg_ro!($xlsb, u8);
-
         paste::paste! {
-            $(#[$doc])*
-            pub fn [<get_ $name>](&mut self) -> $crate::Result<u32> {
-                let msb = self.[<read_ $msb>]()?;
-                let lsb = self.[<read_ $lsb>]()?;
-                let xlsb = self.[<read_ $xlsb>]()?;
-
-                let v = u32::from_le_bytes([xlsb, lsb, msb, 0]);
-
-                Ok(v)
-            }
-        }
-    };
-    ($(#[$doc:meta])* $name:ident, [$msb:ident, $lsb:ident, $xlsb:ident], |$m:ident, $l:ident, $x:ident| $result:expr) => {
-        $crate::reg_ro!($msb, u8);
-        $crate::reg_ro!($lsb, u8);
-        $crate::reg_ro!($xlsb, u8);
-
-        paste::paste! {
-            $(#[$doc])*
+            $(#[$attr])*
             pub fn [<get_ $name>](&mut self) -> $crate::Result<u32> {
                 let $m = self.[<read_ $msb>]()?;
                 let $l = self.[<read_ $lsb>]()?;
                 let $x = self.[<read_ $xlsb>]()?;
 
-                Ok($result)
+                Ok($res)
             }
         }
     };
