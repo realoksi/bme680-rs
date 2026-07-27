@@ -543,7 +543,7 @@ where
         Ok(((self.get_t_fine_2()? * 5) + 128) >> 8)
     }
 
-    pub fn get_press_comp_0(&mut self) -> Result<u32> {
+    pub fn get_press_comp_0(&mut self) -> Result<i32> {
         let mut var1 = (self.get_t_fine_0()? >> 1) - 64000;
         let mut var2 = ((((var1 >> 2) * (var1 >> 2)) >> 11) * (self.get_par_p6()? as i32)) >> 2;
 
@@ -576,7 +576,7 @@ where
         let press_comp =
             (press_comp as i32) + ((var1 + var2 + var3 + ((self.get_par_p7()? as i32) << 7)) >> 4);
 
-        Ok(press_comp as u32)
+        Ok(press_comp)
     }
 
     /// A diagnostic operation that performs a single 256-byte burst read over the whole range of
