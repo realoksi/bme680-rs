@@ -2,14 +2,12 @@
 name = "bme680-rs"
 version = "0.1.0"
 edition = "2024"
-
-[features]
-default = []
-embedded-hal = ["dep:embedded-hal"]
+license = "MIT OR Apache-2.0"
+keywords = ["embedded-hal"]
 
 [dependencies]
 paste = "1.0.15"
-embedded-hal = { version = "1.0.0", default-features = false, optional = true }
+embedded-hal = { version = "1.0.0", default-features = false }
 
 [dev-dependencies]
-embedded-hal-mock = {version = "0.11.1", features = ["eh1"]}
+embedded-hal-mock = { version = "0.11.1", features = ["eh1"] }
