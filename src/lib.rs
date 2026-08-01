@@ -427,9 +427,9 @@ where
     logical_ro!( always: sub_meas_index_2 u8 );
     logical_ro!( always: res_heat_range u8 |a| (a >> 4) & 0b11 );
     logical_ro!( always: res_heat_val i8 ); // Should this be `once`?
-    logical_ro!( always: gas_range_0 u8 |a| (a >> 4) & 0b11 );
-    logical_ro!( always: gas_range_1 u8 |a| (a >> 4) & 0b11 );
-    logical_ro!( always: gas_range_2 u8 |a| (a >> 4) & 0b11 );
+    logical_ro!( always: gas_range_0 u8 |a| a & 0b1111 );
+    logical_ro!( always: gas_range_1 u8 |a| a & 0b1111 );
+    logical_ro!( always: gas_range_2 u8 |a| a & 0b1111 );
 
     logical_rw!( always: ctrl_gas_1 u8 );
     logical_rw!( always: ctrl_gas_0 u8 );
