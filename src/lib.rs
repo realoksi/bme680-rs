@@ -293,7 +293,16 @@ where
             return Ok(());
         }
 
-        self.inner.write(&[0x73, page]).unwrap();
+        let mut status = [0u8; 1];
+
+        self.inner
+            .transaction(&mut [
+                embedded_hal::spi::Operation::Write(&[Status::SPI_ADDR | 0x80]),
+                embedded_hal::spi::Operation::Read(&mut status),
+            ])
+            .map_err(|_| ())?;
+
+        self.inner.write(&[Status::SPI_ADDR, (status[0] & !0b0001_0000) | page << 4]).map_err(|_| ())?;
 
         self.page = Some(page);
 
