@@ -609,6 +609,7 @@ impl<I> BME680<I2cBus<I>>
 where
     I: embedded_hal::i2c::I2c,
 {
+    /// `slave_address` must be either `0x76` or `0x77`.
     pub fn from_i2c(i2c: I, slave_address: u8) -> Self {
         Self::new(I2cBus {
             inner: i2c,
