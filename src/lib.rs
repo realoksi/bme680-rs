@@ -630,28 +630,44 @@ where
         self.get_press_comp(t_fine_2, press_adc_2)
     }
 
-    pub fn get_hum_comp_0(&mut self) -> Result<i32> {
-        let temp_comp_0 = self.get_temp_comp_0()?;
-
-        let var1 = (self.get_hum_adc_0()? as i32)
+    fn get_hum_comp(&mut self, temp_comp: i32, hum_adc: u16) -> Result<i32> {
+        let var1 = (hum_adc as i32)
             - ((self.get_par_h1()? as i32) << 4)
-            - (((temp_comp_0 * (self.get_par_h3()? as i32)) / 100) >> 1);
+            - (((temp_comp * (self.get_par_h3()? as i32)) / 100) >> 1);
         let var2 = ((self.get_par_h2()? as i32)
-            * (((temp_comp_0 * (self.get_par_h4()? as i32)) / 100)
-                + (((temp_comp_0 * ((temp_comp_0 * (self.get_par_h5()? as i32)) / 100)) >> 6)
-                    / 100)
+            * (((temp_comp * (self.get_par_h4()? as i32)) / 100)
+                + (((temp_comp * ((temp_comp * (self.get_par_h5()? as i32)) / 100)) >> 6) / 100)
                 + (1 << 14)))
             >> 10;
         let var3 = var1 * var2;
         let var4 = (((self.get_par_h6()? as i32) << 7)
-            + ((temp_comp_0 * (self.get_par_h7()? as i32)) / 100))
+            + ((temp_comp * (self.get_par_h7()? as i32)) / 100))
             >> 4;
         let var5 = ((var3 >> 14) * (var3 >> 14)) >> 10;
         let var6 = (var4 * var5) >> 1;
 
-        let hum_comp_0 = (((var3 + var6) >> 10) * 1000) >> 12;
+        Ok((((var3 + var6) >> 10) * 1000) >> 12)
+    }
 
-        Ok(hum_comp_0)
+    pub fn get_hum_comp_0(&mut self) -> Result<i32> {
+        let temp_comp_0 = self.get_temp_comp_0()?;
+        let hum_adc_0 = self.get_hum_adc_0()?;
+
+        self.get_hum_comp(temp_comp_0, hum_adc_0)
+    }
+
+    pub fn get_hum_comp_1(&mut self) -> Result<i32> {
+        let temp_comp_1 = self.get_temp_comp_1()?;
+        let hum_adc_1 = self.get_hum_adc_1()?;
+
+        self.get_hum_comp(temp_comp_1, hum_adc_1)
+    }
+
+    pub fn get_hum_comp_2(&mut self) -> Result<i32> {
+        let temp_comp_2 = self.get_temp_comp_2()?;
+        let hum_adc_2 = self.get_hum_adc_2()?;
+
+        self.get_hum_comp(temp_comp_2, hum_adc_2)
     }
 }
 
