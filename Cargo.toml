@@ -2,9 +2,12 @@
 name = "bme680-rs"
 version = "0.1.0"
 edition = "2024"
-repository = "https://github.com/realoksi/bme680-rs"
+description = "a minimal no_std driver for bme68x environmental sensors"
 license = "MIT OR Apache-2.0"
-keywords = ["embedded-hal"]
+repository = "https://github.com/realoksi/bme680-rs"
+keywords = ["embedded-hal", "no_std", "bme680", "bme688", "sensor"]
+categories = ["embedded", "no-std::no-alloc", "hardware-support"]
+readme = "README.md"
 
 [dependencies]
 paste = "1.0.15"
