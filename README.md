@@ -1,10 +1,10 @@
 # bme680-rs
 
-a bare-minimum driver for BME68x sensors
+a minimal no_std driver for bme68x environmental sensors
 
 ## contributions
 
-contributions are appreciated
+contributions are welcome and appreciated
 
 ## license
 
