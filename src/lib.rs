@@ -132,8 +132,6 @@ physical!( gas_range_1 i2c(0x3E) spi(0x3E, 1));
 physical!( gas_range_2 i2c(0x4F) spi(0x4F, 1));
 
 /// iir filter coefficient. useful for suppressing environmental disturbances
-///
-/// see [BME680::set_filter]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Filter {
     /// no filtering
@@ -168,8 +166,6 @@ impl TryFrom<u8> for Filter {
 }
 
 /// controls the bit resolution of a measurement. higher oversampling takes longer
-///
-/// see [BME680::set_osrs_t], [BME680::set_osrs_p], and [BME680::set_osrs_h]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Os {
     /// skips the measurement
@@ -440,7 +436,7 @@ where
     logical_ro!( always: sub_meas_index_1 u8 );
     logical_ro!( always: sub_meas_index_2 u8 );
     logical_ro!( always: res_heat_range u8 |a| (a >> 4) & 0b11 );
-    logical_ro!( always: res_heat_val i8 ); // Should this be `once`?
+    logical_ro!( always: res_heat_val i8 );
     logical_ro!( always: gas_range_0 u8 |a| a & 0b1111 );
     logical_ro!( always: gas_range_1 u8 |a| a & 0b1111 );
     logical_ro!( always: gas_range_2 u8 |a| a & 0b1111 );
