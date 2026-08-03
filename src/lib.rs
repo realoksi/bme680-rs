@@ -568,8 +568,8 @@ where
         Ok(((self.get_t_fine_2()? * 5) + 128) >> 8)
     }
 
-    pub fn get_press_comp_0(&mut self) -> Result<i32> {
-        let mut var1 = (self.get_t_fine_0()? >> 1) - 64000;
+    fn get_press_comp(&mut self, t_fine: i32, press_adc: u32) -> Result<i32> {
+        let mut var1 = (t_fine >> 1) - 64000;
         let mut var2 = ((((var1 >> 2) * (var1 >> 2)) >> 11) * (self.get_par_p6()? as i32)) >> 2;
 
         var2 = var2 + ((var1 * (self.get_par_p5()? as i32)) << 1);
@@ -579,7 +579,7 @@ where
         var1 = var1 >> 18;
         var1 = ((32768 + var1) * (self.get_par_p1()? as i32)) >> 15;
 
-        let press_comp = 1048576 - self.get_press_adc_0()? as i32;
+        let press_comp = 1048576 - press_adc as i32;
         let mut press_comp = ((press_comp - (var2 >> 12)) * 3125) as u32;
 
         if press_comp >= (1 << 30) {
@@ -602,6 +602,27 @@ where
             (press_comp as i32) + ((var1 + var2 + var3 + ((self.get_par_p7()? as i32) << 7)) >> 4);
 
         Ok(press_comp)
+    }
+
+    pub fn get_press_comp_0(&mut self) -> Result<i32> {
+        let t_fine_0 = self.get_t_fine_0()?;
+        let press_adc_0 = self.get_press_adc_0()?;
+
+        self.get_press_comp(t_fine_0, press_adc_0)
+    }
+
+    pub fn get_press_comp_1(&mut self) -> Result<i32> {
+        let t_fine_1 = self.get_t_fine_1()?;
+        let press_adc_1 = self.get_press_adc_1()?;
+
+        self.get_press_comp(t_fine_1, press_adc_1)
+    }
+
+    pub fn get_press_comp_2(&mut self) -> Result<i32> {
+        let t_fine_2 = self.get_t_fine_2()?;
+        let press_adc_2 = self.get_press_adc_2()?;
+
+        self.get_press_comp(t_fine_2, press_adc_2)
     }
 }
 
