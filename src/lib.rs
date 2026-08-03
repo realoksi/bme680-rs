@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 #![deny(unsafe_code)]
 
-#![doc = include_str!("../README.md")]
+#![cfg_attr(not(doctest), doc = include_str!("../README.md"))]
 
 mod macros;
 
