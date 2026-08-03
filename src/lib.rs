@@ -172,7 +172,7 @@ impl TryFrom<u8> for Filter {
 ///
 /// see [BME680::set_osrs_t], [BME680::set_osrs_p], and [BME680::set_osrs_h]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Oversampling {
+pub enum Os {
     /// skips the measurement
     X0 = 0b000,
     /// min oversampling
@@ -184,17 +184,17 @@ pub enum Oversampling {
     X16 = 0b101,
 }
 
-impl TryFrom<u8> for Oversampling {
+impl TryFrom<u8> for Os {
     type Error = ();
 
-    fn try_from(value: u8) -> Result<Oversampling> {
+    fn try_from(value: u8) -> Result<Os> {
         Ok(match value {
-            0b000 => Oversampling::X0,
-            0b001 => Oversampling::X1,
-            0b010 => Oversampling::X2,
-            0b011 => Oversampling::X4,
-            0b100 => Oversampling::X8,
-            0b101 => Oversampling::X16,
+            0b000 => Os::X0,
+            0b001 => Os::X1,
+            0b010 => Os::X2,
+            0b011 => Os::X4,
+            0b100 => Os::X8,
+            0b101 => Os::X16,
             _ => return Err(()),
         })
     }
@@ -484,21 +484,21 @@ where
 
     logical_rw!( always: ctrl_meas u8 );
 
-    pub fn get_osrs_t(&mut self) -> Result<Oversampling> {
-        Oversampling::try_from((self.get_ctrl_meas()? & 0b1110_0000) >> 5)
+    pub fn get_osrs_t(&mut self) -> Result<Os> {
+        Os::try_from((self.get_ctrl_meas()? & 0b1110_0000) >> 5)
     }
 
-    pub fn set_osrs_t(&mut self, value: Oversampling) -> Result<()> {
+    pub fn set_osrs_t(&mut self, value: Os) -> Result<()> {
         let ctrl_meas = (self.get_ctrl_meas()? & !0b1110_0000) | ((value as u8) << 5);
 
         self.set_ctrl_meas(ctrl_meas)
     }
 
-    pub fn get_osrs_p(&mut self) -> Result<Oversampling> {
-        Oversampling::try_from((self.get_ctrl_meas()? & 0b0001_1100) >> 2)
+    pub fn get_osrs_p(&mut self) -> Result<Os> {
+        Os::try_from((self.get_ctrl_meas()? & 0b0001_1100) >> 2)
     }
 
-    pub fn set_osrs_p(&mut self, value: Oversampling) -> Result<()> {
+    pub fn set_osrs_p(&mut self, value: Os) -> Result<()> {
         let ctrl_meas = (self.get_ctrl_meas()? & !0b0001_1100) | ((value as u8) << 2);
 
         self.set_ctrl_meas(ctrl_meas)
@@ -516,11 +516,11 @@ where
 
     logical_rw!( always: ctrl_hum u8 );
 
-    pub fn get_osrs_h(&mut self) -> Result<Oversampling> {
-        Oversampling::try_from(self.get_ctrl_hum()? & 0b0000_0111)
+    pub fn get_osrs_h(&mut self) -> Result<Os> {
+        Os::try_from(self.get_ctrl_hum()? & 0b0000_0111)
     }
 
-    pub fn set_osrs_h(&mut self, value: Oversampling) -> Result<()> {
+    pub fn set_osrs_h(&mut self, value: Os) -> Result<()> {
         let ctrl_hum = (self.get_ctrl_hum()? & !0b0000_0111) | (value as u8);
 
         self.set_ctrl_hum(ctrl_hum)
