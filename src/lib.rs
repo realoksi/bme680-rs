@@ -1,7 +1,6 @@
 #![no_std]
 #![allow(dead_code)]
 #![deny(unsafe_code)]
-
 #![cfg_attr(not(doctest), doc = include_str!("../README.md"))]
 
 mod macros;
@@ -249,7 +248,9 @@ where
     }
 
     fn write<R: Register>(&mut self, value: u8) -> Result<()> {
-        self.inner.write(self.slave_addr, &[R::I2C_ADDR, value]).map_err(|_| ())
+        self.inner
+            .write(self.slave_addr, &[R::I2C_ADDR, value])
+            .map_err(|_| ())
     }
 }
 
@@ -280,7 +281,9 @@ where
     fn write<R: Register>(&mut self, value: u8) -> Result<()> {
         self.set_page(R::PAGE)?;
 
-        self.inner.write(&[R::SPI_ADDR & 0x7F, value]).map_err(|_| ())
+        self.inner
+            .write(&[R::SPI_ADDR & 0x7F, value])
+            .map_err(|_| ())
     }
 }
 
@@ -302,7 +305,9 @@ where
             ])
             .map_err(|_| ())?;
 
-        self.inner.write(&[Status::SPI_ADDR, (status[0] & !0b0001_0000) | page << 4]).map_err(|_| ())?;
+        self.inner
+            .write(&[Status::SPI_ADDR, (status[0] & !0b0001_0000) | page << 4])
+            .map_err(|_| ())?;
 
         self.page = Some(page);
 
