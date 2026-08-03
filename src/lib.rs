@@ -531,7 +531,7 @@ where
         self.set_ctrl_hum(ctrl_hum)
     }
 
-    pub fn get_tfine(&mut self, temp_adc: i32) -> Result<i32> {
+    fn get_t_fine(&mut self, temp_adc: i32) -> Result<i32> {
         let par_t1 = self.get_par_t1()? as i32;
         let par_t2 = self.get_par_t2()? as i32;
         let par_t3 = self.get_par_t3()? as i32;
@@ -546,7 +546,7 @@ where
     pub fn get_t_fine_0(&mut self) -> Result<i32> {
         let temp_adc_0 = self.get_temp_adc_0()? as i32;
 
-        Ok(self.get_tfine(temp_adc_0)?)
+        Ok(self.get_t_fine(temp_adc_0)?)
     }
 
     pub fn get_temp_comp_0(&mut self) -> Result<i32> {
@@ -556,7 +556,7 @@ where
     fn get_t_fine_1(&mut self) -> Result<i32> {
         let temp_adc_1 = self.get_temp_adc_1()? as i32;
 
-        Ok(self.get_tfine(temp_adc_1)?)
+        Ok(self.get_t_fine(temp_adc_1)?)
     }
 
     pub fn get_temp_comp_1(&mut self) -> Result<i32> {
@@ -566,7 +566,7 @@ where
     fn get_t_fine_2(&mut self) -> Result<i32> {
         let temp_adc_2 = self.get_temp_adc_2()? as i32;
 
-        Ok(self.get_tfine(temp_adc_2)?)
+        Ok(self.get_t_fine(temp_adc_2)?)
     }
 
     pub fn get_temp_comp_2(&mut self) -> Result<i32> {
